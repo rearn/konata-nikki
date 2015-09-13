@@ -3,6 +3,7 @@ import sqlite3
 import markdown
 from markdown.extensions.toc import TocExtension
 
+
 conkeylist = ["id", "published", "updated", "title", "author", "context", "status", "next_id", "prev_id"]
 conn = sqlite3.connect('kn.sqlite3')
 tags = []
@@ -23,5 +24,19 @@ print(json_data)
 
 
 root = json.loads(json_data)
-print( markdown.markdown(root["context"], extensions=[TocExtension(baselevel=3)]))
-print( root["tags"] )
+print('<article itemscope itemType="http://schema.org/BlogPosting">')
+print('<h2 itemprop="headline">', root["title"], '</h2>')
+print('<footer>')
+print('<span>公開日: <time itemprop="datePublished">', root["published"] + 'Z', '</time></span>')
+print('<span>更新日: <time itemprop="dateModified">', root["updated"] + 'Z', '</time></span>')
+print('<span itemprop="author">作者: ', root["author"], '</span>')
+print('</footer>')
+print('<ul class="tags" itemprop="articleSection">')
+for tag in root["tags"]:
+	print('<li>', tag, '</li>')
+
+print('</ul>')
+print('<div itemprop="articleBody">')
+print( markdown.markdown(root["context"], extensions=[TocExtension(baselevel=3)], output_format="xhtml5"))
+print('</div>')
+print('</article>')
