@@ -5,7 +5,7 @@ from markdown.extensions.toc import TocExtension
 
 
 conkeylist = ["id", "published", "updated", "title", "author", "context", "status", "next_id", "prev_id"]
-conn = sqlite3.connect('kn.sqlite3')
+conn = sqlite3.connect('./test/kn.sqlite3')
 tags = []
 
 c = conn.cursor()
@@ -37,6 +37,6 @@ for tag in root["tags"]:
 
 print('</ul>')
 print('<div itemprop="articleBody">')
-print( markdown.markdown(root["context"], extensions=[TocExtension(baselevel=3)], output_format="xhtml5"))
+print( markdown.markdown(root["context"], extensions=[TocExtension(baselevel=2)], output_format="xhtml5"))
 print('</div>')
 print('</article>')
