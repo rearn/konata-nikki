@@ -23,9 +23,7 @@ references kn_contents(id)
 on update cascade
 on delete restrict
 );
-INSERT INTO "kn_contents" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','Sample',1,'jubeat_saucer_jubegraph_bot
-===========================
-
+INSERT INTO "kn_contents" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','jubeat_saucer_jubegraph_bot',1,'
 はじめに
 ---------------------------
 このソフトは、[jubegraph](http://jubegraph.dyndns.org/jubeat_saucer/)に自動でアップデートするために開発したソフトです。
