@@ -18,7 +18,7 @@ def kn_read_content(kn_db):
 
 	c.close()
 	dict_data["tags"] = tags
-	return json.dumps(dict_data, sort_keys=True, indent=4)
+	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
 def kn_print_content(json_data):
 	root = json.loads(json_data)
@@ -39,8 +39,8 @@ def kn_print_content(json_data):
 	tlist.extend([markdown.markdown(root["context"], extensions=[TocExtension(baselevel=2)], output_format="xhtml5")])
 	tlist.extend(['</div>'])
 	tlist.extend(['</article>'])
-	print(''.join(tlist))
+	return(''.join(tlist))
 
 if __name__ == '__main__':
 	json_data = kn_read_content('./test/kn.sqlite3')
-	kn_print_content(json_data)
+	print(kn_print_content(json_data))
