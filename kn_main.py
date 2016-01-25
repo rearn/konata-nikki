@@ -22,22 +22,24 @@ def kn_read_content(kn_db):
 
 def kn_print_content(json_data):
 	root = json.loads(json_data)
-	print('<article itemscope itemType="http://schema.org/BlogPosting">')
-	print('<h2 itemprop="headline">', root["title"], '</h2>')
-	print('<footer>')
-	print('<span>公開日: <time itemprop="datePublished">', root["published"] + 'Z', '</time></span>')
-	print('<span>更新日: <time itemprop="dateModified">', root["updated"] + 'Z', '</time></span>')
-	print('<span itemprop="author">作者: ', root["author"], '</span>')
-	print('</footer>')
-	print('<ul class="tags" itemprop="articleSection">')
+	tlist = []
+	tlist.extend(['<article itemscope itemType="http://schema.org/BlogPosting">'])
+	tlist.extend(['<h2 itemprop="headline">', root["title"], '</h2>'])
+	tlist.extend(['<footer>'])
+	tlist.extend(['<span>公開日: <time itemprop="datePublished">', root["published"] + 'Z', '</time></span>'])
+	tlist.extend(['<span>更新日: <time itemprop="dateModified">', root["updated"] + 'Z', '</time></span>'])
+	tlist.extend(['<span itemprop="author">作者: ', root["author"], '</span>'])
+	tlist.extend(['</footer>'])
+	tlist.extend(['<ul class="tags" itemprop="articleSection">'])
 	for tag in root["tags"]:
-		print('<li>', tag, '</li>')
+		tlist.extend(['<li>', tag, '</li>'])
 
-	print('</ul>')
-	print('<div itemprop="articleBody">')
-	print( markdown.markdown(root["context"], extensions=[TocExtension(baselevel=2)], output_format="xhtml5"))
-	print('</div>')
-	print('</article>')
+	tlist.extend(['</ul>'])
+	tlist.extend(['<div itemprop="articleBody">'])
+	tlist.extend([markdown.markdown(root["context"], extensions=[TocExtension(baselevel=2)], output_format="xhtml5")])
+	tlist.extend(['</div>'])
+	tlist.extend(['</article>'])
+	print(''.join(tlist))
 
 if __name__ == '__main__':
 	json_data = kn_read_content('./test/kn.sqlite3')
