@@ -20,9 +20,7 @@ def kn_read_content(kn_db):
 	dict_data["tags"] = tags
 	return json.dumps(dict_data, sort_keys=True, indent=4)
 
-if __name__ == '__main__':
-	json_data = kn_read_content('./test/kn.sqlite3')
-
+def kn_print_content(json_data):
 	root = json.loads(json_data)
 	print('<article itemscope itemType="http://schema.org/BlogPosting">')
 	print('<h2 itemprop="headline">', root["title"], '</h2>')
@@ -40,3 +38,7 @@ if __name__ == '__main__':
 	print( markdown.markdown(root["context"], extensions=[TocExtension(baselevel=2)], output_format="xhtml5"))
 	print('</div>')
 	print('</article>')
+
+if __name__ == '__main__':
+	json_data = kn_read_content('./test/kn.sqlite3')
+	kn_print_content(json_data)
