@@ -48,5 +48,5 @@ def kn_print_content(json_data):
 	return(''.join(tlist))
 
 if __name__ == '__main__':
-	json_data = kn_read_content('./test/kn.sqlite3')
+	json_data = kn_read_content('./tests/kn.sqlite3')
 	print(kn_print_content(json_data))

@@ -58,5 +58,5 @@ docs/_build/
 target/
 
 # kn test
-test/kn.sqlite3
+tests/kn.sqlite3
 
