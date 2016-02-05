@@ -2,6 +2,7 @@ import json
 import sqlite3
 import markdown
 from markdown.extensions.toc import TocExtension
+import jinja2
 
 def dict_factory(cursor, row):
 	d = {}
@@ -28,24 +29,11 @@ def kn_read_content(kn_db):
 
 def kn_print_content(json_data):
 	root = json.loads(json_data)
-	tlist = []
-	tlist.extend(['<article itemscope itemType="http://schema.org/BlogPosting">'])
-	tlist.extend(['<h2 itemprop="headline">', root["title"], '</h2>'])
-	tlist.extend(['<footer>'])
-	tlist.extend(['<span>公開日: <time itemprop="datePublished">', root["published"] + 'Z', '</time></span>'])
-	tlist.extend(['<span>更新日: <time itemprop="dateModified">', root["updated"] + 'Z', '</time></span>'])
-	tlist.extend(['<span itemprop="author">作者: ', root["author"], '</span>'])
-	tlist.extend(['</footer>'])
-	tlist.extend(['<ul class="tags" itemprop="articleSection">'])
-	for tag in root["tags"]:
-		tlist.extend(['<li>', tag, '</li>'])
-
-	tlist.extend(['</ul>'])
-	tlist.extend(['<div itemprop="articleBody">'])
-	tlist.extend([markdown.markdown(root["context"], extensions=[TocExtension(baselevel=2)], output_format="xhtml5")])
-	tlist.extend(['</div>'])
-	tlist.extend(['</article>'])
-	return(''.join(tlist))
+	con = markdown.markdown(root['context'], extensions=[TocExtension(baselevel=2)], output_format='xhtml5')
+	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./tests/', encoding='utf8'))
+	htmltmpl = env.get_template('contents.material.html.ja')
+	ret = htmltmpl.render({'root':root, 'markdown':con})
+	return ret
 
 if __name__ == '__main__':
 	json_data = kn_read_content('./tests/kn.sqlite3')

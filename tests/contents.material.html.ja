@@ -1,0 +1,16 @@
+<article itemscope itemType="http://schema.org/BlogPosting">
+<h2 itemprop="headline"> {{ root.title }} </h2>
+<footer>
+<span>公開日: <time itemprop="datePublished"> {{ root.published }} </time></span>
+<span>更新日: <time itemprop="dateModified"> {{ root.updated }} </time></span>
+<span itemprop="author">作者: {{ root.author }} </span>
+</footer>
+<ul class="tags" itemprop="articleSection">
+{% for tag in root['tags'] %}
+	<li> {{ tag }} </li>
+{% endfor %}
+</ul>
+<div itemprop="articleBody">
+{{ markdown }}
+</div>
+</article>
