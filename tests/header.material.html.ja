@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>{{ contents.title }} - {{ site.title }}</title>
+</head>
+<body>
+<header>
+<a href="{{ site.uri }}"><h1>{{ site.title }}</h1></a>
+<nav><ul>
+<li><a href="{{ prev.uri }}" class="prev">{{ prev.title }}</a></li>
+<li><a href="{{ next.uri }}" class="next">{{ next.title }}</a></li>
+</ul></nav>
+</header>

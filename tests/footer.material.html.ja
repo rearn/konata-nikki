@@ -1,0 +1,9 @@
+<nav><ul>
+<li><a href="{{ prev.uri }}" class="prev">{{ prev.title }}</a></li>
+<li><a href="{{ next.uri }}" class="next">{{ next.title }}</a></li>
+</ul></nav>
+<footer>
+<p><a href="{{ site.uri }}">目次に戻る</a></p>
+</footer>
+</body>
+</html>
