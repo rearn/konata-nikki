@@ -1,4 +1,12 @@
 <nav><ul>
+{% if prev -%}
 <li><a href="{{ prev.uri }}" class="prev">{{ prev.title }}</a></li>
+{% else %}
+<li>最初のページです</li>
+{%- endif %}
+{% if next -%}
 <li><a href="{{ next.uri }}" class="next">{{ next.title }}</a></li>
+{% else %}
+<li>最後のページです</li>
+{%-s endif %}
 </ul></nav>
