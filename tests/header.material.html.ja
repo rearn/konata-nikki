@@ -6,6 +6,6 @@
 </head>
 <body>
 <header>
-<a href="{{ site.uri }}"><h1>{{ site.title }}</h1></a>
+<a href="{{ site.top_uri }}"><h1>{{ site.title }}</h1></a>
 {{ nav }}
 </header>
