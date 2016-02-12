@@ -17,10 +17,27 @@ def kn_read_content(kn_db):
 	conn.row_factory= dict_factory
 	c = conn.cursor()
 
-	for row in c.execute('SELECT * FROM kn_contents INNER JOIN kn_author ON kn_contents.author_id = kn_author.id WHERE kn_contents.id = ? LIMIT 1;', [ 1]):
+	sql_stmt = '''
+		SELECT
+			*
+		FROM kn_contents
+		INNER JOIN kn_author
+			ON kn_contents.author_id = kn_author.id
+		WHERE kn_contents.id = ?
+		LIMIT 1
+	'''
+	for row in c.execute(sql_stmt, [ 1]):
 		dict_data=row
 
-	for row_tag in c.execute('SELECT * FROM kn_contents_tags INNER JOIN kn_tags ON kn_contents_tags.tag_id = kn_tags.id WHERE content_id = ?;', [ 1]):
+	sql_stmt = '''
+		SELECT
+			*
+		FROM kn_contents_tags
+		INNER JOIN kn_tags
+			ON kn_contents_tags.tag_id = kn_tags.id
+		WHERE content_id = ?
+	'''
+	for row_tag in c.execute(sql_stmt, [ 1]):
 		tags.append(row_tag['tag'])
 
 	c.close()
