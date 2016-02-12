@@ -1,0 +1,4 @@
+<nav><ul>
+<li><a href="{{ prev.uri }}" class="prev">{{ prev.title }}</a></li>
+<li><a href="{{ next.uri }}" class="next">{{ next.title }}</a></li>
+</ul></nav>
