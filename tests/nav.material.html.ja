@@ -1,11 +1,11 @@
 <nav><ul>
-{% if prev -%}
-<li><a href="{{ prev.uri }}" class="prev">{{ prev.title }}</a></li>
+{% if nav.prev -%}
+<li><a href="{{ nav.prev.uri }}" class="prev">{{ nav.prev.title }}</a></li>
 {% else %}
 <li>最初のページです</li>
 {%- endif %}
-{% if next -%}
-<li><a href="{{ next.uri }}" class="next">{{ next.title }}</a></li>
+{% if nav.next -%}
+<li><a href="{{ nav.next.uri }}" class="next">{{ nav.next.title }}</a></li>
 {% else %}
 <li>最後のページです</li>
 {%-s endif %}

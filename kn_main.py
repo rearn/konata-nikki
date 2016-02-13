@@ -10,10 +10,17 @@ def dict_factory(cursor, row):
 		d[col[0]] = row[idx]
 	return d
 
+def kn_search_uri(id, type):
+	if type == 'content':
+		return ''.join('/content/',id)
+	if type == 'tag':
+		return ''.join('/tag/',id)
+
 def kn_read_content(kn_db):
 	conn = sqlite3.connect(kn_db)
 	tags = []
 	dict_data = {}
+	nav = {}
 
 	conn.row_factory= dict_factory
 	c = conn.cursor()
@@ -64,6 +71,23 @@ def kn_read_content(kn_db):
 	'''
 	for row_tag in c.execute(sql_stmt, [ 1]):
 		tags.append(row_tag['tag'])
+
+	sql_stmt = '''
+		SELECT
+			id,
+			title
+		FROM kn_sites
+		WHERE content_id = ?
+	'''
+	if dict_data['contents'][0]['prev_id'] is not None:
+		prev = c.execute(sql_stmt, dict_data['contents'][0]['prev_id'])
+		nav['prev'] = prev[0]
+	del dict_data['contents'][0]['prev_id']
+	if dict_data['contents'][0]['next_id'] is not None:
+		next = c.execute(sql_stmt, dict_data['contents'][0]['next_id'])
+		nav['next'] = next[0]
+	del dict_data['contents'][0]['next_id']
+	dict_data['contents'][0]['nav'] = nav
 
 	c.close()
 	dict_data['contents'][0]['tags'] = tags
