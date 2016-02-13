@@ -81,10 +81,12 @@ def kn_read_content(kn_db):
 	'''
 	if dict_data['contents'][0]['prev_id'] is not None:
 		prev = c.execute(sql_stmt, dict_data['contents'][0]['prev_id'])
+		prev[0]['uri'] = kn_search_uri(prev[0]['id'], 'content')
 		nav['prev'] = prev[0]
 	del dict_data['contents'][0]['prev_id']
 	if dict_data['contents'][0]['next_id'] is not None:
 		next = c.execute(sql_stmt, dict_data['contents'][0]['next_id'])
+		next[0]['uri'] = kn_search_uri(next[0]['id'], 'content')
 		nav['next'] = next[0]
 	del dict_data['contents'][0]['next_id']
 	dict_data['contents'][0]['nav'] = nav
