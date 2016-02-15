@@ -28,6 +28,7 @@ def kn_read_content(kn_db):
 	sql_stmt = '''
 		SELECT
 			kn_sites.id,
+			top_uri,
 			begun,
 			updated,
 			title,
@@ -99,9 +100,20 @@ def kn_print_content(json_data):
 	root = json.loads(json_data)
 	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=2)], output_format='xhtml5')
 	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./tests/', encoding='utf8'))
+
+	htmltmpl = env.get_template('header.material.html.ja')
+	ret_header = htmltmpl.render({'contents':root['contents'][0], 'site':root['site']})
+
+	htmltmpl = env.get_template('footer.material.html.ja')
+	ret_footer = htmltmpl.render({'contents':root['contents'][0], 'site':root['site']})
+
+	#htmltmpl = env.get_template('nav.material.html.ja')
+	ret_nav = '' #htmltmpl.render({'prev':root['contents'][0]['nav'].get('prev'), 'next':root['contents'][0]['nav'].get('next')})
+
 	htmltmpl = env.get_template('contents.material.html.ja')
-	ret = htmltmpl.render({'root':root['contents'][0], 'markdown':con})
-	return ret
+	ret_contents = htmltmpl.render({'root':root['contents'][0], 'markdown':con})
+
+	return ' '.join([ret_header, ret_contents, ret_nav, ret_footer])
 
 if __name__ == '__main__':
 	json_data = kn_read_content('./tests/kn.sqlite3')
