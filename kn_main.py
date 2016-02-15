@@ -107,8 +107,8 @@ def kn_print_content(json_data):
 	htmltmpl = env.get_template('footer.material.html.ja')
 	ret_footer = htmltmpl.render({'contents':root['contents'][0], 'site':root['site']})
 
-	#htmltmpl = env.get_template('nav.material.html.ja')
-	ret_nav = '' #htmltmpl.render({'prev':root['contents'][0]['nav'].get('prev'), 'next':root['contents'][0]['nav'].get('next')})
+	htmltmpl = env.get_template('nav.material.html.ja')
+	ret_nav = htmltmpl.render({'nav':root['contents'][0]['nav']})
 
 	htmltmpl = env.get_template('contents.material.html.ja')
 	ret_contents = htmltmpl.render({'root':root['contents'][0], 'markdown':con})
