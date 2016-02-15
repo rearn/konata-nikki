@@ -1,14 +1,7 @@
 {% if nav -%}
 <nav><ul>
-{%- if nav.prev %}
-<li><a href="{{ nav.prev.uri }}" class="prev">{{ nav.prev.title }}</a></li>
-{%- else %}
-<li>最初のページです</li>
-{%- endif -%}
-{%- if nav.next %}
-<li><a href="{{ nav.next.uri }}" class="next">{{ nav.next.title }}</a></li>
-{%- else %}
-<li>最後のページです</li>
-{%- endif %}
+{% for key, value in nav.items() -%}
+<li><a href="{{ value.uri }}" class="{{ key }}">{{ value.title }}</a></li>
+{% endfor -%}
 </ul></nav>
 {%- endif %}
