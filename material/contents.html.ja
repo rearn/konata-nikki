@@ -5,8 +5,8 @@
 <span itemprop="author">作者: {{ root.author }}</span>
 <ul class="tags" itemprop="articleSection">
 {% for tag in root['tags'] -%}
-	<li>{{ tag }}</li>
-{%- endfor %}
+<li><a href="{{ tag.uri }}">{{ tag.tag }}</a></li>
+{% endfor -%}
 </ul>
 <div itemprop="articleBody">
 {{ markdown }}
