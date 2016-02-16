@@ -12,9 +12,9 @@ def dict_factory(cursor, row):
 
 def kn_search_uri(id, type):
 	if type == 'content':
-		return ''.join('/content/',id)
+		return ''.join(['/content/', str(id)])
 	if type == 'tag':
-		return ''.join('/tag/',id)
+		return ''.join(['/tag/', str(id)])
 
 def kn_read_content(kn_db):
 	conn = sqlite3.connect(kn_db)
@@ -64,6 +64,7 @@ def kn_read_content(kn_db):
 
 	sql_stmt = '''
 		SELECT
+			kn_tags.id,
 			kn_tags.tag
 		FROM kn_contents_tags
 		INNER JOIN kn_tags
@@ -71,7 +72,8 @@ def kn_read_content(kn_db):
 		WHERE content_id = ?
 	'''
 	for row_tag in c.execute(sql_stmt, [ 1]):
-		tags.append(row_tag['tag'])
+		row_tag['uri'] = kn_search_uri(row_tag['id'], 'tag')
+		tags.append(row_tag)
 
 	sql_stmt = '''
 		SELECT
