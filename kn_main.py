@@ -98,24 +98,22 @@ def kn_read_content(kn_db):
 	dict_data['contents'][0]['tags'] = tags
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
+def kn_temp_proc(env, temp_file, temp_dict):
+	htmltmpl = env.get_template(temp_file)
+	return htmltmpl.render(temp_dict)
+
+
 def kn_print_content(json_data):
 	root = json.loads(json_data)
 	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=2)], output_format='xhtml5')
 	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./material/', encoding='utf8'))
 
-	htmltmpl = env.get_template('nav.html.ja')
 	test = {'next': {'uri':'aaa', 'title':'ee'}}
-	#ret_nav = htmltmpl.render({'nav':root['contents'][0]['nav']})
-	ret_nav = htmltmpl.render({'nav':test})
-
-	htmltmpl = env.get_template('header.html.ja')
-	ret_header = htmltmpl.render({'contents':root['contents'][0], 'site':root['site'], 'nav':ret_nav})
-
-	htmltmpl = env.get_template('footer.html.ja')
-	ret_footer = htmltmpl.render({'contents':root['contents'][0], 'site':root['site'], 'nav':ret_nav})
-
-	htmltmpl = env.get_template('contents.html.ja')
-	ret_contents = htmltmpl.render({'root':root['contents'][0], 'markdown':con})
+	#ret_nav = kn_temp_proc('nav.html.ja', {'nav':root['contents'][0]['nav']})
+	ret_nav = kn_temp_proc(env, 'nav.html.ja', {'nav':test})
+	ret_header = kn_temp_proc(env, 'header.html.ja', {'contents':root['contents'][0], 'site':root['site'], 'nav':ret_nav})
+	ret_footer = kn_temp_proc(env, 'footer.html.ja', {'contents':root['contents'][0], 'site':root['site'], 'nav':ret_nav})
+	ret_contents = kn_temp_proc(env, 'contents.html.ja', {'root':root['contents'][0], 'markdown':con})
 
 	return '\n'.join([ret_header, ret_contents, ret_footer])
 
