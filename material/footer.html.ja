@@ -1,6 +1,0 @@
-{{ nav }}
-<footer>
-<p><a href="{{ site.top_uri }}">目次に戻る</a></p>
-</footer>
-</body>
-</html>

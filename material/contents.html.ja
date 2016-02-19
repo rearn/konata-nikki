@@ -1,14 +1,22 @@
-<article itemscope itemType="http://schema.org/BlogPosting">
-<h2 itemprop="headline">{{ root.title }}</h2>
-<span>公開日: <time itemprop="datePublished">{{ root.published }}</time></span>
-<span>更新日: <time itemprop="dateModified">{{ root.updated }}</time></span>
-<span>作者: <span itemprop="author">{{ root.author }}</span></span>
-<ul class="tags" itemprop="articleSection">
-{% for tag in root['tags'] -%}
-<li><a href="{{ tag.uri }}">{{ tag.tag }}</a></li>
-{% endfor -%}
-</ul>
-<div itemprop="articleBody">
-{{ markdown }}
-</div>
-</article>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>{{ contents[0].title }} - {{ site.title }}</title>
+</head>
+<body>
+<header>
+<a href="{{ site.top_uri }}"><h1>{{ site.title }}</h1></a>
+<p>{{ site.abstract }}</p>
+</header>
+{%- import "macro.html.jp" as kn_root_macro -%}
+{{ kn_root_macro.nav(nav) -}}
+{% for root in contents -%}
+	{{ kn_root_macro.contents(root, markdown) }}
+{%- endfor %}
+{{ kn_root_macro.nav(nav) -}}
+<footer>
+<p><a href="{{ site.top_uri }}">目次に戻る</a></p>
+</footer>
+</body>
+</html>

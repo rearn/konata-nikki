@@ -108,14 +108,9 @@ def kn_print_content(json_data):
 	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=2)], output_format='xhtml5')
 	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./material/', encoding='utf8'))
 
-	test = {'next': {'uri':'aaa', 'title':'ee'}}
-	#ret_nav = kn_temp_proc('nav.html.ja', {'nav':root['contents'][0]['nav']})
-	ret_nav = kn_temp_proc(env, 'nav.html.ja', {'nav':test})
-	ret_header = kn_temp_proc(env, 'header.html.ja', {'contents':root['contents'][0], 'site':root['site'], 'nav':ret_nav})
-	ret_footer = kn_temp_proc(env, 'footer.html.ja', {'contents':root['contents'][0], 'site':root['site'], 'nav':ret_nav})
-	ret_contents = kn_temp_proc(env, 'contents.html.ja', {'root':root['contents'][0], 'markdown':con})
-
-	return '\n'.join([ret_header, ret_contents, ret_footer])
+	test = {'next': {'uri': 'aaa', 'title': 'ee'}}
+	#return kn_temp_proc(env, 'contents.html.ja', {'nav':root['contents'][0]['nav'], 'contents': root['contents'], 'site': root['site'], 'markdown': con})
+	return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
 
 if __name__ == '__main__':
 	json_data = kn_read_content('./tests/kn.sqlite3')

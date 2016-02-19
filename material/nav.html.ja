@@ -1,7 +1,0 @@
-{% if nav -%}
-<nav><ul>
-{% for key, value in nav.items() -%}
-<li><a href="{{ value.uri }}" class="{{ key }}">{{ value.title }}</a></li>
-{% endfor -%}
-</ul></nav>
-{%- endif %}
