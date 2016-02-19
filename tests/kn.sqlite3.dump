@@ -6,6 +6,8 @@ published date,
 updated date,
 title varchar(1024) unique not null,
 author_id int,
+natural_lang char(16),
+markup_lang char(16),
 context clob,
 status char(16),
 next_id int unique default null,
@@ -23,7 +25,7 @@ references kn_contents(id)
 on update cascade
 on delete restrict
 );
-INSERT INTO "kn_contents" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','jubeat_saucer_jubegraph_bot',1,'
+INSERT INTO "kn_contents" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','jubeat_saucer_jubegraph_bot',1,'ja-JP','markdown','
 はじめに
 ---------------------------
 このソフトは、[jubegraph](http://jubegraph.dyndns.org/jubeat_saucer/)に自動でアップデートするために開発したソフトです。
