@@ -105,7 +105,7 @@ def kn_temp_proc(env, temp_file, temp_dict):
 
 def kn_print_content(json_data):
 	root = json.loads(json_data)
-	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=2)], output_format='xhtml5')
+	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
 	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./material/', encoding='utf8'))
 
 	test = {'next': {'uri': 'aaa', 'title': 'ee'}}
@@ -113,6 +113,6 @@ def kn_print_content(json_data):
 	return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
 
 if __name__ == '__main__':
-	json_data = kn_read_content('./tests/kn.sqlite3', 1)
+	json_data = kn_read_content('./tests/kn.sqlite3', 2)
 	print(json_data) # debug
 	print(kn_print_content(json_data))
