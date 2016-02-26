@@ -16,7 +16,7 @@ def kn_search_uri(id, type):
 	if type == 'tag':
 		return ''.join(['/tag/', str(id)])
 
-def kn_read_content(kn_db):
+def kn_read_content(kn_db, contents_id):
 	conn = sqlite3.connect(kn_db)
 	tags = []
 	dict_data = {}
@@ -60,7 +60,7 @@ def kn_read_content(kn_db):
 		WHERE kn_contents.id = ?
 		LIMIT 1
 	'''
-	dict_data['contents'] = list(c.execute(sql_stmt, [ 1]))
+	dict_data['contents'] = list(c.execute(sql_stmt, [contents_id]))
 
 	sql_stmt = '''
 		SELECT
@@ -71,7 +71,7 @@ def kn_read_content(kn_db):
 			ON kn_contents_tags.tag_id = kn_tags.id
 		WHERE content_id = ?
 	'''
-	for row_tag in c.execute(sql_stmt, [ 1]):
+	for row_tag in c.execute(sql_stmt, [contents_id]):
 		row_tag['uri'] = kn_search_uri(row_tag['id'], 'tag')
 		tags.append(row_tag)
 
@@ -113,6 +113,6 @@ def kn_print_content(json_data):
 	return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
 
 if __name__ == '__main__':
-	json_data = kn_read_content('./tests/kn.sqlite3')
+	json_data = kn_read_content('./tests/kn.sqlite3', 1)
 	print(json_data) # debug
 	print(kn_print_content(json_data))
