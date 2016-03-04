@@ -27,25 +27,8 @@ def kn_read_content(kn_db, contents_id):
 
 	sql_stmt = '''
 		SELECT
-			kn_sites.id,
-			top_uri,
-			begun,
-			updated,
-			title,
-			abstract,
-			latest_content_id
-		FROM kn_sites
-		INNER JOIN kn_author
-			ON kn_sites.main_author_id = kn_author.id
-		WHERE kn_sites.id = ?
-		LIMIT 1
-	'''
-	for row in c.execute(sql_stmt, [ 1]): # site 1
-		dict_data['site']=row
-
-	sql_stmt = '''
-		SELECT
 			kn_contents.id,
+			site_id,
 			published,
 			updated,
 			title,
@@ -61,6 +44,24 @@ def kn_read_content(kn_db, contents_id):
 		LIMIT 1
 	'''
 	dict_data['contents'] = list(c.execute(sql_stmt, [contents_id]))
+	print(dict_data)
+	sql_stmt = '''
+		SELECT
+			kn_sites.id,
+			top_uri,
+			begun,
+			updated,
+			title,
+			abstract,
+			latest_content_id
+		FROM kn_sites
+		INNER JOIN kn_author
+			ON kn_sites.main_author_id = kn_author.id
+		WHERE kn_sites.id = ?
+		LIMIT 1
+	'''
+	for row in c.execute(sql_stmt, [dict_data['contents'][0]['site_id']]):
+		dict_data['site'] = row
 
 	sql_stmt = '''
 		SELECT
@@ -113,6 +114,6 @@ def kn_print_content(json_data):
 	return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
 
 if __name__ == '__main__':
-	json_data = kn_read_content('./tests/kn.sqlite3', 2)
+	json_data = kn_read_content('./tests/kn.sqlite3', 1)
 	print(json_data) # debug
 	print(kn_print_content(json_data))
