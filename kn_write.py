@@ -15,108 +15,122 @@ def kn_update_status(kn_db, id, site_id, status):
 	conn.row_factory= dict_factory
 	c = conn.cursor()
 
+	sql_stmt = '''
+		SELECT
+			status
+		FROM kn_contents
+		WHERE id = ?
+		LIMIT 1
+	'''
+
+	for row in c.execute(sql_stmt, [id, site_id,]):
+		now_status = row['status']
+
 	if status[0] == '2':
-		sql_stmt = '''
-			SELECT
-				id,
-				prev_id
-			FROM kn_contents
-			WHERE id > ?
-			  AND status LIKE '2__'
-			  AND site_id = ?
-			ORDER BY id ASC
-			LIMIT 1
-		'''
+		if now_status[0] != '2':
+			sql_stmt = '''
+				SELECT
+					id,
+					prev_id
+				FROM kn_contents
+				WHERE id > ?
+				  AND status LIKE '2__'
+				  AND site_id = ?
+				ORDER BY id ASC
+				LIMIT 1
+			'''
 
-		for row in c.execute(sql_stmt, [id, site_id,]):
-			dict_data['next'] = row
-			break
-		else:
-			temp = {'id': None, 'prev_id': None}
-			dict_data['next'] = temp
+			for row in c.execute(sql_stmt, [id, site_id,]):
+				dict_data['next'] = row
+				break
+			else:
+				temp = {'id': None, 'prev_id': None}
+				dict_data['next'] = temp
 
-		sql_stmt = '''
-			SELECT
-				id,
-				next_id
-			FROM kn_contents
-			WHERE id < ?
-			  AND status LIKE '2__'
-			  AND site_id = ?
-			ORDER BY id DESC
-			LIMIT 1
-		'''
+			sql_stmt = '''
+				SELECT
+					id,
+					next_id
+				FROM kn_contents
+				WHERE id < ?
+				  AND status LIKE '2__'
+				  AND site_id = ?
+				ORDER BY id DESC
+				LIMIT 1
+			'''
 
-		for row in c.execute(sql_stmt, [id, site_id]):
-			dict_data['prev'] = row
-			break
-		else:
-			temp = {'id': None, 'next_id': None}
-			dict_data['prev'] = temp
+			for row in c.execute(sql_stmt, [id, site_id]):
+				dict_data['prev'] = row
+				break
+			else:
+				temp = {'id': None, 'next_id': None}
+				dict_data['prev'] = temp
 
-		sql_stmt = '''
-			SELECT
-				id,
-				prev_id,
-				next_id
-			FROM kn_contents
-			WHERE id = ?
-			  AND status LIKE '2__'
-			  AND site_id = ?
-			ORDER BY id DESC
-			LIMIT 1
-		'''
+			sql_stmt = '''
+				SELECT
+					id,
+					prev_id,
+					next_id
+				FROM kn_contents
+				WHERE id = ?
+				  AND status LIKE '2__'
+				  AND site_id = ?
+				ORDER BY id DESC
+				LIMIT 1
+			'''
 
-		for row in c.execute(sql_stmt, [id, site_id]):
-			dict_data['now'] = row
-			break
-		else:
-			temp = {'prev_id': None, 'next_id': None}
-			dict_data['now'] = temp
+			for row in c.execute(sql_stmt, [id, site_id]):
+				dict_data['now'] = row
+				break
+			else:
+				temp = {'prev_id': None, 'next_id': None}
+				dict_data['now'] = temp
 
-		if( \
-			dict_data['next']['id'] != None \
-			and dict_data['prev']['id'] != None \
-		) \
-		and ( \
-			dict_data['next']['id'] != dict_data['prev']['next_id'] \
-			or dict_data['prev']['id'] != dict_data['next']['prev_id']
-		):
-			# error
-			print('error')
-			print(dict_data)
+			if( \
+				dict_data['next']['id'] != None \
+				and dict_data['prev']['id'] != None \
+			) \
+			and ( \
+				dict_data['next']['id'] != dict_data['prev']['next_id'] \
+				or dict_data['prev']['id'] != dict_data['next']['prev_id']
+			):
+				# error
+				print('error')
+				print(dict_data)
 
-		sql_stmt = '''
-			UPDATE kn_contents
-			SET next_id = ?
-			WHERE id = ?
-		'''
-		if dict_data['prev']['id']:
-			c.execute(sql_stmt, [id, dict_data['prev']['id']])
+			sql_stmt = '''
+				UPDATE kn_contents
+				SET next_id = ?
+				WHERE id = ?
+			'''
+			if dict_data['prev']['id']:
+				c.execute(sql_stmt, [id, dict_data['prev']['id']])
 
-		sql_stmt = '''
-			UPDATE kn_contents
-			SET prev_id = ?
-			WHERE id = ?
-		'''
-		if dict_data['next']['id']:
-			c.execute(sql_stmt, [id, dict_data['next']['id']])
+			sql_stmt = '''
+				UPDATE kn_contents
+				SET prev_id = ?
+				WHERE id = ?
+			'''
+			if dict_data['next']['id']:
+				c.execute(sql_stmt, [id, dict_data['next']['id']])
 
-		sql_stmt = '''
-			UPDATE kn_contents
-			SET
-				prev_id = ?,
-				next_id = ?,
-				status = ?
-			WHERE id = ?
-		'''
-		c.execute(sql_stmt, [dict_data['prev']['id'], dict_data['next']['id'], status, id])
-		conn.commit()
-		print('OK')
+			sql_stmt = '''
+				UPDATE kn_contents
+				SET
+					prev_id = ?,
+					next_id = ?,
+					status = ?
+				WHERE id = ?
+			'''
+			c.execute(sql_stmt, [dict_data['prev']['id'], dict_data['next']['id'], status, id])
+			conn.commit()
+			print('OK')
 	else:
 		# 未実装
-		print('未実装')
-
+		if now_status[0] == '2':
+			print('未実装')
+		elif now_status[0:2] != status[0:2]:
+			print('未実装')
 
 	return
 
