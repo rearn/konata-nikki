@@ -2,7 +2,7 @@ SQLITE = sqlite3
 CAT = cat
 RM = rm -f
 
-kn.sqlite3: kn.sqlite3.dump
+kn.sqlite3: kn.sqlite3.sql
 	$(RM) $@
 	$(CAT) $< | $(SQLITE) $@
 
