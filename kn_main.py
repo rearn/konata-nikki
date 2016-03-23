@@ -34,9 +34,7 @@ def kn_read_content(kn_db, contents_id):
 			title,
 			kn_author.author,
 			context,
-			status,
-			next_id,
-			prev_id
+			status
 		FROM kn_contents
 		INNER JOIN kn_author
 			ON kn_contents.author_id = kn_author.id
@@ -80,19 +78,30 @@ def kn_read_content(kn_db, contents_id):
 		SELECT
 			id,
 			title
-		FROM kn_sites
-		WHERE content_id = ?
+		FROM kn_contents
+		WHERE id > ?
+		  AND status LIKE '2__'
+		  AND site_id = ?
+		ORDER BY id ASC
+		LIMIT 1
 	'''
-	if dict_data['contents'][0]['prev_id'] is not None:
-		prev = c.execute(sql_stmt, dict_data['contents'][0]['prev_id'])
-		prev[0]['uri'] = kn_search_uri(prev[0]['id'], 'content')
-		nav['prev'] = prev[0]
-	del dict_data['contents'][0]['prev_id']
-	if dict_data['contents'][0]['next_id'] is not None:
-		next = c.execute(sql_stmt, dict_data['contents'][0]['next_id'])
-		next[0]['uri'] = kn_search_uri(next[0]['id'], 'content')
-		nav['next'] = next[0]
-	del dict_data['contents'][0]['next_id']
+	for row in c.execute(sql_stmt, [contents_id, dict_data['site']['id']]):
+		nav['next'] = row
+		nav['next']['uri'] = kn_search_uri(row['id'], 'content')
+	sql_stmt = '''
+		SELECT
+			id,
+			title
+		FROM kn_contents
+		WHERE id < ?
+		  AND status LIKE '2__'
+		  AND site_id = ?
+		ORDER BY id DESC
+		LIMIT 1
+	'''
+	for row in c.execute(sql_stmt, [contents_id, dict_data['site']['id']]):
+		nav['prev'] = row
+		nav['prev']['uri'] = kn_search_uri(row['id'], 'content')
 	dict_data['contents'][0]['nav'] = nav
 
 	c.close()
@@ -110,8 +119,8 @@ def kn_print_content(json_data):
 	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./material/', encoding='utf8'))
 
 	test = {'next': {'uri': 'aaa', 'title': 'ee'}}
-	#return kn_temp_proc(env, 'contents.html.ja', {'nav':root['contents'][0]['nav'], 'contents': root['contents'], 'site': root['site'], 'markdown': con})
-	return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
+	return kn_temp_proc(env, 'contents.html.ja', {'nav':root['contents'][0]['nav'], 'contents': root['contents'], 'site': root['site'], 'markdown': con})
+	#return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
 
 if __name__ == '__main__':
 	json_data = kn_read_content('./tests/kn.sqlite3', 1)

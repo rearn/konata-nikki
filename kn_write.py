@@ -8,7 +8,7 @@ def dict_factory(cursor, row):
 	return d
 
 
-def kn_update_status(kn_db, id, site_id, status):
+def kn_update_status(kn_db, id, status):
 	dict_data = {}
 	conn = sqlite3.connect(kn_db)
 
@@ -16,121 +16,23 @@ def kn_update_status(kn_db, id, site_id, status):
 	c = conn.cursor()
 
 	sql_stmt = '''
-		SELECT
-			status
+		SELECT status
 		FROM kn_contents
 		WHERE id = ?
 		LIMIT 1
 	'''
 
-	for row in c.execute(sql_stmt, [id, site_id,]):
+	for row in c.execute(sql_stmt, [id]):
 		now_status = row['status']
 
-	if status[0] == '2':
-		if now_status[0] != '2':
-			sql_stmt = '''
-				SELECT
-					id,
-					prev_id
-				FROM kn_contents
-				WHERE id > ?
-				  AND status LIKE '2__'
-				  AND site_id = ?
-				ORDER BY id ASC
-				LIMIT 1
-			'''
-
-			for row in c.execute(sql_stmt, [id, site_id,]):
-				dict_data['next'] = row
-				break
-			else:
-				temp = {'id': None, 'prev_id': None}
-				dict_data['next'] = temp
-
-			sql_stmt = '''
-				SELECT
-					id,
-					next_id
-				FROM kn_contents
-				WHERE id < ?
-				  AND status LIKE '2__'
-				  AND site_id = ?
-				ORDER BY id DESC
-				LIMIT 1
-			'''
-
-			for row in c.execute(sql_stmt, [id, site_id]):
-				dict_data['prev'] = row
-				break
-			else:
-				temp = {'id': None, 'next_id': None}
-				dict_data['prev'] = temp
-
-			sql_stmt = '''
-				SELECT
-					id,
-					prev_id,
-					next_id
-				FROM kn_contents
-				WHERE id = ?
-				  AND status LIKE '2__'
-				  AND site_id = ?
-				ORDER BY id DESC
-				LIMIT 1
-			'''
-
-			for row in c.execute(sql_stmt, [id, site_id]):
-				dict_data['now'] = row
-				break
-			else:
-				temp = {'prev_id': None, 'next_id': None}
-				dict_data['now'] = temp
-
-			if( \
-				dict_data['next']['id'] != None \
-				and dict_data['prev']['id'] != None \
-			) \
-			and ( \
-				dict_data['next']['id'] != dict_data['prev']['next_id'] \
-				or dict_data['prev']['id'] != dict_data['next']['prev_id']
-			):
-				# error
-				print('error')
-				print(dict_data)
-
-			sql_stmt = '''
-				UPDATE kn_contents
-				SET next_id = ?
-				WHERE id = ?
-			'''
-			if dict_data['prev']['id']:
-				c.execute(sql_stmt, [id, dict_data['prev']['id']])
-
-			sql_stmt = '''
-				UPDATE kn_contents
-				SET prev_id = ?
-				WHERE id = ?
-			'''
-			if dict_data['next']['id']:
-				c.execute(sql_stmt, [id, dict_data['next']['id']])
-
-			sql_stmt = '''
-				UPDATE kn_contents
-				SET
-					prev_id = ?,
-					next_id = ?,
-					status = ?
-				WHERE id = ?
-			'''
-			c.execute(sql_stmt, [dict_data['prev']['id'], dict_data['next']['id'], status, id])
-			conn.commit()
-			print('OK')
-	else:
-		# 未実装
-		if now_status[0] == '2':
-			print('未実装')
-		elif now_status[0:2] != status[0:2]:
-			print('未実装')
+	if now_status[0:2] != status[0:2]:
+		sql_stmt = '''
+			UPDATE kn_contents
+			SET status = ?
+			WHERE id = ?
+		'''
+		c.execute(sql_stmt, [status, id])
+		conn.commit()
 
 	return
 
@@ -213,4 +115,4 @@ if __name__ == '__main__':
 	print(json_data) # debug
 	r = kn_write_content('./tests/kn.sqlite3', json_data)
 	#r = [{'id': 2, 'site_id': 1}]
-	kn_update_status('./tests/kn.sqlite3', r[0]['id'], r[0]['site_id'], '200')
+	kn_update_status('./tests/kn.sqlite3', r[0]['id'], '200')
