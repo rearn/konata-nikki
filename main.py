@@ -20,8 +20,16 @@ from flask import Flask, request, url_for, Response
 
 app = Flask(__name__)
 
-@app.route('/content/<content_id>')
-def kn_html_content(content_id):
+@app.route('/')
+def index():
+	pass
+
+@app.route('/tag/<int:tag_id>')
+def tag(content_id):
+	pass
+
+@app.route('/content/<int:content_id>')
+def content(content_id):
 	return konata.kn_print_content(konata.kn_read_content('./tests/kn.sqlite3', content_id))
 
 if __name__ == '__main__':
