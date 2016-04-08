@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+import markdown
+from markdown.extensions.toc import TocExtension
+import jinja2
 import konata
 from flask import Flask, request, url_for, Response
 
@@ -28,9 +32,22 @@ def index():
 def tag(content_id):
 	pass
 
+def kn_temp_proc(env, temp_file, temp_dict):
+	htmltmpl = env.get_template(temp_file)
+	return htmltmpl.render(temp_dict)
+
+def kn_print_content(json_data):
+	root = json.loads(json_data)
+	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
+	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./material/', encoding='utf8'))
+
+	test = {'next': {'uri': 'aaa', 'title': 'ee'}}
+	return kn_temp_proc(env, 'contents.html.ja', {'nav':root['contents'][0]['nav'], 'contents': root['contents'], 'site': root['site'], 'markdown': con})
+	#return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
+
 @app.route('/content/<int:content_id>')
 def content(content_id):
-	return konata.kn_print_content(konata.kn_read_content('./tests/kn.sqlite3', content_id))
+	return kn_print_content(konata.kn_read_content('./tests/kn.sqlite3', content_id))
 
 if __name__ == '__main__':
 	app.run()

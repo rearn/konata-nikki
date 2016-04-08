@@ -17,9 +17,6 @@
 
 import json
 import sqlite3
-import markdown
-from markdown.extensions.toc import TocExtension
-import jinja2
 
 def dict_factory(cursor, row):
 	d = {}
@@ -123,20 +120,6 @@ def kn_read_content(kn_db, contents_id):
 	c.close()
 	dict_data['contents'][0]['tags'] = tags
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
-
-def kn_temp_proc(env, temp_file, temp_dict):
-	htmltmpl = env.get_template(temp_file)
-	return htmltmpl.render(temp_dict)
-
-
-def kn_print_content(json_data):
-	root = json.loads(json_data)
-	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
-	env = jinja2.Environment(loader=jinja2.FileSystemLoader('./material/', encoding='utf8'))
-
-	test = {'next': {'uri': 'aaa', 'title': 'ee'}}
-	return kn_temp_proc(env, 'contents.html.ja', {'nav':root['contents'][0]['nav'], 'contents': root['contents'], 'site': root['site'], 'markdown': con})
-	#return kn_temp_proc(env, 'contents.html.ja', {'nav': test, 'contents': root['contents'], 'site': root['site'], 'markdown': con})
 
 def kn_update_status(kn_db, id, status):
 	dict_data = {}
