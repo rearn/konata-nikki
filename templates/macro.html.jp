@@ -6,7 +6,7 @@
 <span>作者: <span itemprop="author">{{ root.author }}</span></span>
 <ul class="tags" itemprop="articleSection">
 {% for tag in root['tags'] -%}
-<li><a href="{{ tag.uri }}">{{ tag.tag }}</a></li>
+<li><a href="{{ url_for('tag', tag_id=tag.id) }}">{{ tag.tag }}</a></li>
 {% endfor -%}
 </ul>
 <div itemprop="articleBody">
@@ -19,7 +19,7 @@
 {% if nav -%}
 <nav><ul>
 {% for key, value in nav.items() -%}
-<li><a href="{{ value.uri }}" class="{{ key }}">{{ value.title }}</a></li>
+<li><a href="{{ url_for('content', content_id=value.id) }}" class="{{ key }}">{{ value.title }}</a></li>
 {%- endfor %}
 </ul></nav>
 {%- endif %}

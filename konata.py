@@ -230,6 +230,3 @@ if __name__ == '__main__':
 	#r = [{'id': 2, 'site_id': 1}]
 	kn_update_status('./tests/kn.sqlite3', r[0]['id'], '200')
 
-	json_data = kn_read_content('./tests/kn.sqlite3', 1)
-	print(json_data) # debug
-	print(kn_print_content(json_data))
