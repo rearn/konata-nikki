@@ -50,6 +50,10 @@ def kn_read_content(kn_db, contents_id):
 		LIMIT 1
 	'''
 	dict_data['contents'] = list(c.execute(sql_stmt, [contents_id]))
+	if len(dict_data['contents']) == 0:
+		raise ValueError('404 Not Found')
+	if dict_data['contents'][0]['status'][0] != '2':
+		raise ValueError('404 Not Found')
 	sql_stmt = '''
 		SELECT
 			kn_sites.id,
@@ -109,6 +113,7 @@ def kn_read_content(kn_db, contents_id):
 	dict_data['contents'][0]['nav'] = nav
 
 	c.close()
+	conn.close()
 	dict_data['contents'][0]['tags'] = tags
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
@@ -138,6 +143,8 @@ def kn_update_status(kn_db, id, status):
 		c.execute(sql_stmt, [status, id])
 		conn.commit()
 
+	c.close()
+	conn.close()
 	return
 
 
@@ -192,6 +199,8 @@ def kn_write_content(kn_db, write_json):
 	'''
 	l = c.execute(sql_stmt, [last])
 	conn.commit()
+	c.close()
+	conn.close()
 	return list(l)
 
 if __name__ == '__main__':

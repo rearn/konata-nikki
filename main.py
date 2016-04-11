@@ -19,7 +19,7 @@ import json
 import markdown
 from markdown.extensions.toc import TocExtension
 import konata
-from flask import Flask, request, url_for, Response, render_template
+from flask import Flask, request, url_for, Response, render_template, abort
 
 app = Flask(__name__)
 
@@ -39,7 +39,11 @@ def kn_print_content(json_data):
 
 @app.route('/content/<int:content_id>')
 def content(content_id):
-	return kn_print_content(konata.kn_read_content('./tests/kn.sqlite3', content_id))
+	try:
+		return kn_print_content(konata.kn_read_content('./tests/kn.sqlite3', content_id))
+	except:
+		abort(404)
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
