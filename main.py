@@ -44,6 +44,18 @@ def content(content_id):
 	except:
 		abort(404)
 
+@app.errorhandler(404)
+def error_handler(error):
+	print(error.description)
+	print(error.name)
+	e = {
+		'code': error.code,
+		'name': error.name,
+		'description': error.description
+	}
+	e['message'] = '見つかりません。アドレスが間違っていると思われます。'
+	return render_template('error.html.ja', error=e), error.code
+
 
 if __name__ == '__main__':
 	app.run(debug=True)

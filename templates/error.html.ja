@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>{{ error.code }} {{ error.name }}</title>
+</head>
+<body>
+<header> 
+<h1>{{ error.name }}</h1>
+</header>
+<span id="error_code">{{ error.code }}</span>
+<p lang="en">
+{{ error.description }}
+</p>
+<p>
+{{ error.message }}
+</p>
+<footer>
+<p><a href="{{ url_for('index') }}">目次に戻る</a></p>
+</footer>
+</body>
+</html>
