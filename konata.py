@@ -47,12 +47,11 @@ def kn_read_content(kn_db, contents_id):
 		INNER JOIN kn_author
 			ON kn_contents.author_id = kn_author.id
 		WHERE kn_contents.id = ?
+		  AND status LIKE '2__'
 		LIMIT 1
 	'''
 	dict_data['contents'] = list(c.execute(sql_stmt, [contents_id]))
 	if len(dict_data['contents']) == 0:
-		raise ValueError('404 Not Found')
-	if dict_data['contents'][0]['status'][0] != '2':
 		raise ValueError('404 Not Found')
 	sql_stmt = '''
 		SELECT
