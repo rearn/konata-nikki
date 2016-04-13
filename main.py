@@ -46,8 +46,6 @@ def content(content_id):
 
 @app.errorhandler(404)
 def error_handler(error):
-	print(error.description)
-	print(error.name)
 	e = {
 		'code': error.code,
 		'name': error.name,
