@@ -116,6 +116,40 @@ def kn_read_content(kn_db, contents_id):
 	dict_data['contents'][0]['tags'] = tags
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
+def kn_read_tag(kn_db, tags_id):
+	conn = sqlite3.connect(kn_db)
+	tags = []
+	dict_data = {}
+	nav = {}
+
+	conn.row_factory= dict_factory
+	c = conn.cursor()
+
+	sql_stmt = '''
+		SELECT
+			kn_contents.id,
+			site_id,
+			title,
+			status
+		FROM kn_contents_tags
+		INNER JOIN kn_contents
+			ON kn_contents_tags.content_id = kn_contents.id
+		WHERE tag_id = ?
+		  AND status LIKE '2__'
+	'''
+	dict_data['tags'] = list(c.execute(sql_stmt, [tags_id]))
+	sql_stmt = '''
+		SELECT tag
+		FROM kn_tags
+		WHERE id = ?
+	'''
+	for row_tag in c.execute(sql_stmt, [tags_id]):
+		dict_data['tag_name'] = row_tag['tag']
+	c.close()
+	conn.close()
+	return(json.dumps(dict_data, sort_keys=True, indent=4))
+
+
 def kn_update_status(kn_db, id, status):
 	dict_data = {}
 	conn = sqlite3.connect(kn_db)

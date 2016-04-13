@@ -28,8 +28,11 @@ def index():
 	pass
 
 @app.route('/tag/<int:tag_id>')
-def tag(content_id):
-	pass
+def tag(tag_id):
+	json_data = konata.kn_read_tag('./tests/kn.sqlite3', tag_id)
+	app.logger.debug(json_data)
+	return json_data
+
 
 def kn_print_content(json_data):
 	root = json.loads(json_data)
