@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>{#{{ site.title }}#}</title>
+</head>
+<body>
+<header>
+{#
+<a href="{{ site.top_uri }}"><h1>{{ site.title }}</h1></a>
+<p>{{ site.abstract }}</p>
+#}
+<a href="{{ url_for('index') }}"><h1>index</h1></a>
+</header>
+<ul>
+{% for con in list.contents -%}
+<li><a href="{{ url_for('content', content_id=con.id) }}">{{ con.title }}</a></li>
+{%- endfor %}
+</ul>
+<footer>
+<p><a href="{{ url_for('index') }}">目次に戻る</a></p>
+</footer>
+</body>
+</html>

@@ -149,6 +149,27 @@ def kn_read_tag(kn_db, tags_id):
 	conn.close()
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
+def kn_contents_list(kn_db):
+	conn = sqlite3.connect(kn_db)
+	dict_data = {}
+
+	conn.row_factory= dict_factory
+	c = conn.cursor()
+
+	sql_stmt = '''
+		SELECT
+			id,
+			title
+		FROM kn_contents
+		WHERE status LIKE '2__'
+		ORDER BY id DESC
+	'''
+
+	dict_data['contents'] = list(c.execute(sql_stmt))
+	c.close()
+	conn.close()
+	return(json.dumps(dict_data, sort_keys=True, indent=4))
+
 
 def kn_update_status(kn_db, id, status):
 	dict_data = {}

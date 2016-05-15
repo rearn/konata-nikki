@@ -25,7 +25,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	pass
+	json_data = konata.kn_contents_list('./tests/kn.sqlite3')
+	app.logger.debug(json_data)
+	return render_template('top.html.ja', list=json.loads(json_data))
 
 @app.route('/tag/<int:tag_id>')
 def tag(tag_id):
