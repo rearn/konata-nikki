@@ -17,3 +17,7 @@ konata-nikki provides a simple and friendly blog system to readers.
 ## Author
 
 [minamibashi rearn](https://github.com/rearn)
+
+## Development note in author
+
+See [MEMO.md](https://github.com/rearn/konata-nikki/blob/master/MEMO.md) (in Japanese).
