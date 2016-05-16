@@ -33,7 +33,10 @@ def index():
 def tag(tag_id):
 	json_data = konata.kn_read_tag('./tests/kn.sqlite3', tag_id)
 	app.logger.debug(json_data)
-	return render_template('tags.html.ja', tag=json.loads(json_data))
+	tag = json.loads(json_data)
+	if tag['tags'] == []:
+		abort(404)
+	return render_template('tags.html.ja', tag=tag)
 
 
 def kn_print_content(json_data):

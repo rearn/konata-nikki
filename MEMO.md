@@ -27,7 +27,7 @@
 # これからやること
 I can't use `issue` by now! Tell me someone!!!
 - [x] トップページ作成
-- [ ] 存在しない`tag`の処理
+- [x] 存在しない`tag`の処理
 - [ ] `site`情報の取得方法を変更
 - [ ] 記事の追加
 - [ ] 記事に`tag`を追加
