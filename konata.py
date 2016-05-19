@@ -24,8 +24,8 @@ def dict_factory(cursor, row):
 		d[col[0]] = row[idx]
 	return d
 
-def kn_read_content(kn_db, contents_id):
-	conn = sqlite3.connect(kn_db)
+def read_content(db, contents_id):
+	conn = sqlite3.connect(db)
 	tags = []
 	dict_data = {}
 	nav = {}
@@ -116,8 +116,8 @@ def kn_read_content(kn_db, contents_id):
 	dict_data['contents'][0]['tags'] = tags
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
-def kn_read_tag(kn_db, tags_id):
-	conn = sqlite3.connect(kn_db)
+def read_tag(db, tags_id):
+	conn = sqlite3.connect(db)
 	tags = []
 	dict_data = {}
 	nav = {}
@@ -149,8 +149,8 @@ def kn_read_tag(kn_db, tags_id):
 	conn.close()
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
-def kn_contents_list(kn_db):
-	conn = sqlite3.connect(kn_db)
+def contents_list(db):
+	conn = sqlite3.connect(db)
 	dict_data = {}
 
 	conn.row_factory= dict_factory
@@ -171,9 +171,9 @@ def kn_contents_list(kn_db):
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
 
-def kn_update_status(kn_db, id, status):
+def update_status(db, id, status):
 	dict_data = {}
-	conn = sqlite3.connect(kn_db)
+	conn = sqlite3.connect(db)
 
 	conn.row_factory= dict_factory
 	c = conn.cursor()
@@ -202,8 +202,8 @@ def kn_update_status(kn_db, id, status):
 	return
 
 
-def kn_write_content(kn_db, write_json):
-	conn = sqlite3.connect(kn_db)
+def write_content(db, write_json):
+	conn = sqlite3.connect(db)
 	write_list=[]
 
 	write_date = json.loads(write_json)
@@ -280,7 +280,7 @@ if __name__ == '__main__':
 	t.append(dict)
 	json_data = json.dumps(t, sort_keys=True, indent=4)
 	print(json_data) # debug
-	r = kn_write_content('./tests/kn.sqlite3', json_data)
+	r = write_content('./tests/kn.sqlite3', json_data)
 	#r = [{'id': 2, 'site_id': 1}]
-	kn_update_status('./tests/kn.sqlite3', r[0]['id'], '200')
+	update_status('./tests/kn.sqlite3', r[0]['id'], '200')
 

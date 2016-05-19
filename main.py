@@ -25,13 +25,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	json_data = konata.kn_contents_list('./tests/kn.sqlite3')
+	json_data = konata.contents_list('./tests/kn.sqlite3')
 	app.logger.debug(json_data)
 	return render_template('top.html.ja', list=json.loads(json_data))
 
 @app.route('/tag/<int:tag_id>')
 def tag(tag_id):
-	json_data = konata.kn_read_tag('./tests/kn.sqlite3', tag_id)
+	json_data = konata.read_tag('./tests/kn.sqlite3', tag_id)
 	app.logger.debug(json_data)
 	tag = json.loads(json_data)
 	if tag['tags'] == []:
@@ -39,7 +39,7 @@ def tag(tag_id):
 	return render_template('tags.html.ja', tag=tag)
 
 
-def kn_print_content(json_data):
+def print_content(json_data):
 	root = json.loads(json_data)
 	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
 
@@ -48,7 +48,7 @@ def kn_print_content(json_data):
 @app.route('/content/<int:content_id>')
 def content(content_id):
 	try:
-		return kn_print_content(konata.kn_read_content('./tests/kn.sqlite3', content_id))
+		return print_content(konata.read_content('./tests/kn.sqlite3', content_id))
 	except:
 		abort(404)
 
