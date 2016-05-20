@@ -43,7 +43,7 @@ def print_content(json_data):
 	root = json.loads(json_data)
 	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
 
-	return render_template('contents.html.ja', nav=root['contents'][0]['nav'], contents=root['contents'], site=root['site'], markdown=con)
+	return render_template('contents.html.ja', nav=root['contents'][0]['nav'], contents=root['contents'], markdown=con)
 
 @app.route('/content/<int:content_id>')
 def content(content_id):

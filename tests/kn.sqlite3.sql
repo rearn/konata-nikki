@@ -2,7 +2,6 @@ PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE kn_contents (
 id integer primary key autoincrement,
-site_id integer,
 published date,
 updated date default CURRENT_TIMESTAMP,
 title varchar(1024) unique not null,
@@ -11,16 +10,12 @@ natural_lang char(16),
 markup_lang char(16),
 context clob,
 status char(16) default '100',
-foreign key(site_id)
-references kn_sites(id)
-on update cascade
-on delete set null
 foreign key(author_id)
 references kn_author(id)
 on update cascade
 on delete set null
 );
-INSERT INTO "kn_contents" VALUES(1,1,'2015-09-09 10:15:44','2015-09-09 10:15:44','jubeat_saucer_jubegraph_bot',1,'ja-JP','markdown','
+INSERT INTO "kn_contents" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','jubeat_saucer_jubegraph_bot',1,'ja-JP','markdown','
 はじめに
 ===========================
 このソフトは、[jubegraph](http://jubegraph.dyndns.org/jubeat_saucer/)に自動でアップデートするために開発したソフトです。
@@ -68,23 +63,17 @@ INSERT INTO "kn_tags" VALUES(1,'test');
 INSERT INTO "kn_tags" VALUES(2,'tast2');
 CREATE TABLE kn_sites (
 id integer primary key autoincrement,
-top_uri varchar(1024),
 begun date,
 updated date,
 title varchar(1024) unique not null,
 main_author_id int,
 abstract clob,
-latest_content_id int unique default null,
 foreign key(main_author_id)
 references kn_author(id)
 on update cascade
 on delete set null
-foreign key(latest_content_id)
-references kn_contents(id)
-on update cascade
-on delete restrict
 );
-INSERT INTO "kn_sites" VALUES(1,'//example.com','2015-09-09 10:15:44','2015-09-09 10:15:44','kn_test_site',1,'テストページだす',1);
+INSERT INTO "kn_sites" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','kn_test_site',1,'テストページだす');
 DELETE FROM sqlite_sequence;
 INSERT INTO "sqlite_sequence" VALUES('kn_contents',1);
 INSERT INTO "sqlite_sequence" VALUES('kn_sites',1);

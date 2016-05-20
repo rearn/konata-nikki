@@ -24,6 +24,30 @@ def dict_factory(cursor, row):
 		d[col[0]] = row[idx]
 	return d
 
+def read_site(db):
+	conn = sqlite3.connect(db)
+
+	conn.row_factory= dict_factory
+	c = conn.cursor()
+
+	sql_stmt = '''
+		SELECT
+			id,
+			begun,
+			updated,
+			title,
+			abstract
+		FROM kn_sites
+		WHERE id = ?
+		LIMIT 1
+	'''
+	for row in c.execute(sql_stmt, [1]):
+		dict_data = row
+
+	c.close()
+	conn.close()
+	return dict_data
+
 def read_content(db, contents_id):
 	conn = sqlite3.connect(db)
 	tags = []
@@ -36,7 +60,6 @@ def read_content(db, contents_id):
 	sql_stmt = '''
 		SELECT
 			kn_contents.id,
-			site_id,
 			published,
 			updated,
 			title,
@@ -53,23 +76,6 @@ def read_content(db, contents_id):
 	dict_data['contents'] = list(c.execute(sql_stmt, [contents_id]))
 	if len(dict_data['contents']) == 0:
 		raise ValueError('404 Not Found')
-	sql_stmt = '''
-		SELECT
-			kn_sites.id,
-			top_uri,
-			begun,
-			updated,
-			title,
-			abstract,
-			latest_content_id
-		FROM kn_sites
-		INNER JOIN kn_author
-			ON kn_sites.main_author_id = kn_author.id
-		WHERE kn_sites.id = ?
-		LIMIT 1
-	'''
-	for row in c.execute(sql_stmt, [dict_data['contents'][0]['site_id']]):
-		dict_data['site'] = row
 
 	sql_stmt = '''
 		SELECT
@@ -90,11 +96,10 @@ def read_content(db, contents_id):
 		FROM kn_contents
 		WHERE id > ?
 		  AND status LIKE '2__'
-		  AND site_id = ?
 		ORDER BY id ASC
 		LIMIT 1
 	'''
-	for row in c.execute(sql_stmt, [contents_id, dict_data['site']['id']]):
+	for row in c.execute(sql_stmt, [contents_id]):
 		nav['next'] = row
 	sql_stmt = '''
 		SELECT
@@ -103,11 +108,10 @@ def read_content(db, contents_id):
 		FROM kn_contents
 		WHERE id < ?
 		  AND status LIKE '2__'
-		  AND site_id = ?
 		ORDER BY id DESC
 		LIMIT 1
 	'''
-	for row in c.execute(sql_stmt, [contents_id, dict_data['site']['id']]):
+	for row in c.execute(sql_stmt, [contents_id]):
 		nav['prev'] = row
 	dict_data['contents'][0]['nav'] = nav
 
@@ -128,7 +132,6 @@ def read_tag(db, tags_id):
 	sql_stmt = '''
 		SELECT
 			kn_contents.id,
-			site_id,
 			title,
 			status
 		FROM kn_contents_tags
@@ -226,7 +229,6 @@ def write_content(db, write_json):
 	sql_stmt = '''
 		INSERT INTO
 			kn_contents (
-				site_id,
 				published,
 				title,
 				author_id,
@@ -234,28 +236,26 @@ def write_content(db, write_json):
 				markup_lang,
 				context
 			)
-		VALUES (?,?,?,?,?,?,?)
+		VALUES (?,?,?,?,?,?)
 	'''
 
 	for d in write_date:
-		t = [1, d['published'], d['title'], 1, 'ja-JP', 'markdown', d['context']]
+		t = [d['published'], d['title'], 1, 'ja-JP', 'markdown', d['context']]
 		write_list.append(tuple(t))
 	print(write_list)
 	c.executemany(sql_stmt, write_list)
 	conn.commit()
 
 	sql_stmt = '''
-		SELECT
-			id,
-			site_id
+		SELECT id
 		FROM kn_contents
 		WHERE id > ?
 	'''
 	l = c.execute(sql_stmt, [last])
-	conn.commit()
+	ret = list(l)
 	c.close()
 	conn.close()
-	return list(l)
+	return ret
 
 if __name__ == '__main__':
 	dict = {
