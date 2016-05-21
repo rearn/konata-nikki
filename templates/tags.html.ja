@@ -2,14 +2,12 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>{{ tag.tag_name }}{# - {{ site.title }}#}</title>
+<title>{{ tag.tag_name }} - {{ site.title }}</title>
 </head>
 <body>
 <header>
-{#
 <a href="{{ url_for('index') }}"><h1>{{ site.title }}</h1></a>
 <p>{{ site.abstract }}</p>
-#}
 <a href="{{ url_for('index') }}"><h1>index</h1></a>
 </header>
 <ul>

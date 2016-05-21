@@ -46,7 +46,7 @@ def read_site(db):
 
 	c.close()
 	conn.close()
-	return dict_data
+	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
 def read_content(db, contents_id):
 	conn = sqlite3.connect(db)

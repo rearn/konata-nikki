@@ -25,32 +25,40 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	json_data = konata.contents_list('./tests/kn.sqlite3')
-	app.logger.debug(json_data)
-	return render_template('top.html.ja', list=json.loads(json_data))
+	site_json = konata.read_site('./tests/kn.sqlite3')
+	list_json = konata.contents_list('./tests/kn.sqlite3')
+	app.logger.debug(list_json)
+	site_dict = json.loads(site_json)
+	list_dict = json.loads(list_json)
+	return render_template('top.html.ja', list=list_dict, site=site_dict)
 
 @app.route('/tag/<int:tag_id>')
 def tag(tag_id):
-	json_data = konata.read_tag('./tests/kn.sqlite3', tag_id)
-	app.logger.debug(json_data)
-	tag = json.loads(json_data)
-	if tag['tags'] == []:
+	site_json = konata.read_site('./tests/kn.sqlite3')
+	tag_json = konata.read_tag('./tests/kn.sqlite3', tag_id)
+	app.logger.debug(tag_json)
+	site_dict = json.loads(site_json)
+	tag_dict = json.loads(tag_json)
+	if tag_dict['tags'] == []:
 		abort(404)
-	return render_template('tags.html.ja', tag=tag)
+	return render_template('tags.html.ja', tag=tag_dict, site=site_dict)
 
 
-def print_content(json_data):
-	root = json.loads(json_data)
-	con = markdown.markdown(root['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
+def print_content(contents_json, site_json):
+	contens_dict = json.loads(contents_json)
+	site_dict = json.loads(site_json)
+	con = markdown.markdown(contens_dict['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
 
-	return render_template('contents.html.ja', nav=root['contents'][0]['nav'], contents=root['contents'], markdown=con)
+	return render_template('contents.html.ja', nav=contens_dict['contents'][0]['nav'], contents=contens_dict['contents'], site=site_dict, markdown=con)
 
 @app.route('/content/<int:content_id>')
 def content(content_id):
+	site_json = konata.read_site('./tests/kn.sqlite3')
 	try:
-		return print_content(konata.read_content('./tests/kn.sqlite3', content_id))
+		contents_json = konata.read_content('./tests/kn.sqlite3', content_id)
 	except:
 		abort(404)
+	return print_content(contents_json, site_json)
 
 @app.errorhandler(404)
 def error_handler(error):
