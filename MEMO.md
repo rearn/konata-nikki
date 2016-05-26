@@ -31,7 +31,7 @@ I can't use `issue` by now! Tell me someone!!!
 - [x] `site`情報の取得方法を変更
 - [ ] 記事の追加
 - [ ] 記事に`tag`を追加
-- [ ] `tag list`の追加
+- [x] `tag list`の追加
 	- ここまでできたら、ベータ版
 - [ ] テストコードの追加
 	- ここまでできたら、`v0.0.1`

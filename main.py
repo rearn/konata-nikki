@@ -32,6 +32,17 @@ def index():
 	list_dict = json.loads(list_json)
 	return render_template('top.html.ja', list=list_dict, site=site_dict)
 
+@app.route('/tag/')
+@app.route('/tag')
+def tag_list():
+	site_json = konata.read_site('./tests/kn.sqlite3')
+	list_json = konata.tags_list('./tests/kn.sqlite3')
+	app.logger.debug(list_json)
+	site_dict = json.loads(site_json)
+	list_dict = json.loads(list_json)
+	app.logger.debug(list_dict)
+	return render_template('tag_list.html.ja', list=list_dict, site=site_dict)
+
 @app.route('/tag/<int:tag_id>')
 def tag(tag_id):
 	site_json = konata.read_site('./tests/kn.sqlite3')

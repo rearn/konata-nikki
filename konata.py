@@ -173,6 +173,35 @@ def contents_list(db):
 	conn.close()
 	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
+def tags_list(db):
+	conn = sqlite3.connect(db)
+	dict_data = {}
+	tags = []
+
+	conn.row_factory= dict_factory
+	c = conn.cursor()
+
+	sql_stmt = '''
+		SELECT
+			kn_tags.id,
+			tag,
+			count(kn_tags.id)
+		FROM kn_contents_tags
+		LEFT JOIN kn_tags
+			ON kn_contents_tags.tag_id = kn_tags.id
+		GROUP BY tag
+		ORDER BY count(kn_tags.id) DESC
+	'''
+
+	for row in c.execute(sql_stmt):
+		row['count'] = row['count(kn_tags.id)']
+		del(row['count(kn_tags.id)'])
+		tags.append(row)
+
+	dict_data['tag_list'] = tags
+	c.close()
+	conn.close()
+	return(json.dumps(dict_data, sort_keys=True, indent=4))
 
 def update_status(db, id, status):
 	dict_data = {}
