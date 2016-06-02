@@ -70,6 +70,17 @@ def content(content_id):
 		abort(404)
 	return print_content(contents_json, site_json)
 
+@app.route("/write/", methods=['GET', 'POST'])
+def write():
+	from datetime import datetime
+	if request.method == 'POST':
+		w_dict = {'published': datetime.now().strftime("%Y/%m/%d %H:%M:%S")}
+		w_dict['title'] = request.form['title']
+		w_dict['context'] = request.form['context']
+		json_data = json.dumps([w_dict], sort_keys=True, indent=4)
+		return json_data
+	return render_template('write1.html.ja')
+
 @app.errorhandler(404)
 def error_handler(error):
 	e = {
