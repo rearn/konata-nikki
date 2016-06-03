@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>記事の追加</title>
+</head>
+<body>
+<form method="post" action="{{ url_for('write_step1') }}">
+<ul>
+<li class="name">
+<label>タイトル</label>
+<input type="text" name="title" size="80">
+</li>
+<li class="context">
+<label for="context">本文</label>
+<textarea name="context" cols="80" rows="24"></textarea>
+</li>
+<li>
+<input type="submit" value="送信する">
+</li>
+</ul>
+</form>
+</body>
+</html>

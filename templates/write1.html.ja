@@ -2,22 +2,23 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>記事の追加</title>
+<title>記事の追加（確認）</title>
 </head>
 <body>
-<form method="post" action="{{ url_for('write') }}">
-<ul>
-<li class="name">
-<label>タイトル</label>
-<input type="text" name="title" size="80">
-</li>
-<li class="context">
-<label for="context">本文</label>
-<textarea name="context" cols="80" rows="24"></textarea>
-</li>
-<li>
+<p>まだ、投稿は完了していません。</p>
+<p>以下の様に表示されます。問題ありませんか？</p>
+<article itemscope itemType="http://schema.org/BlogPosting">
+<h2 itemprop="headline">{{ root.title }}</h2>
+<span>公開日: <time itemprop="datePublished">2038-01-19 03:14:07</time></span>
+<span>更新日: <time itemprop="dateModified">{{ root.updated }}</time></span>
+<span>作者: <span itemprop="author">{{ root.author }}</span></span>
+<div itemprop="articleBody">
+{{ root.markdown }}
+</div>
+</article>
+<form method="post" action="{{ url_for('write_step2') }}">
+<input type="hidden" name="date" value="{{ root.updated }}">
 <input type="submit" value="送信する">
-</li>
 </form>
 </body>
 </html>

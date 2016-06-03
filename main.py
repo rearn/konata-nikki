@@ -16,12 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
-import markdown
+from markdown import markdown
 from markdown.extensions.toc import TocExtension
 import konata
-from flask import Flask, request, url_for, Response, render_template, abort
+from flask import Flask, request, url_for, Response, render_template, abort, redirect
 
 app = Flask(__name__)
+up_data = {}
 
 @app.route('/')
 def index():
@@ -53,11 +54,13 @@ def tag(tag_id):
 		abort(404)
 	return render_template('tags.html.ja', tag=tag_dict, site=site_dict)
 
+def make_content(md):
+	return markdown(md, extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
 
 def print_content(contents_json, site_json):
 	contens_dict = json.loads(contents_json)
 	site_dict = json.loads(site_json)
-	con = markdown.markdown(contens_dict['contents'][0]['context'], extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
+	con = make_content(contens_dict['contents'][0]['context'])
 
 	return render_template('contents.html.ja', nav=contens_dict['contents'][0]['nav'], contents=contens_dict['contents'], site=site_dict, markdown=con)
 
@@ -70,16 +73,36 @@ def content(content_id):
 		abort(404)
 	return print_content(contents_json, site_json)
 
-@app.route("/write/", methods=['GET', 'POST'])
+@app.route("/write/")
 def write():
+	return render_template('write0.html.ja')
+
+
+@app.route("/write/step1", methods=['GET', 'POST'])
+def write_step1():
 	from datetime import datetime
 	if request.method == 'POST':
-		w_dict = {'published': datetime.now().strftime("%Y/%m/%d %H:%M:%S")}
+		w_dict = {'updated': datetime.now().strftime("%Y/%m/%d %H:%M:%S")}
 		w_dict['title'] = request.form['title']
 		w_dict['context'] = request.form['context']
+		w_dict['author'] = 'name'
+
 		json_data = json.dumps([w_dict], sort_keys=True, indent=4)
+		up_data[w_dict['updated']] = json_data
+
+		w_dict['markdown'] = make_content(w_dict['context'])
+		return render_template('write1.html.ja', root=w_dict)
+
+	return redirect(url_for('write'), code=302)
+
+@app.route("/write/step2", methods=['GET', 'POST'])
+def write_step2():
+	if request.method == 'POST':
+		app.logger.debug(up_data.keys())
+		json_data = up_data[request.form['date']]
+		# 何らかのチェックが必要だと思われる
+		del up_data[request.form['date']]
 		return json_data
-	return render_template('write1.html.ja')
 
 @app.errorhandler(404)
 def error_handler(error):
