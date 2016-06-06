@@ -74,19 +74,22 @@ def content(content_id):
 	return print_content(contents_json, site_json)
 
 def get_up_data_json(d):
-	app.logger.debug(up_data.keys())
-	json_data = up_data[d]
-	# 何らかのチェックが必要だと思われる
-	del up_data[d]
-	return json_data
+	if d in up_data:
+		app.logger.debug(up_data.keys())
+		json_data = up_data[d]
+		del up_data[d]
+		return json_data
+	else:
+		return ''
 
 @app.route("/write/", methods=['GET', 'POST'])
 def write():
 	if request.method == 'POST':
 		json_data = get_up_data_json(request.form['date'])
-		dict = json.loads(json_data)
-		app.logger.debug(dict)
-		return render_template('write0.html.ja', root=dict[0])
+		if json_data != '':
+			dict = json.loads(json_data)
+			app.logger.debug(dict)
+			return render_template('write0.html.ja', root=dict[0])
 	return render_template('write0.html.ja')
 
 @app.route("/write/step1", methods=['GET', 'POST'])
@@ -110,8 +113,8 @@ def write_step1():
 def write_step2():
 	if request.method == 'POST':
 		json_data = get_up_data_json(request.form['date'])
-		return json_data
-
+		if json_data != '':
+			return json_data
 	return redirect(url_for('write'), code=302)
 
 @app.errorhandler(404)
