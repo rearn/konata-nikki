@@ -9,11 +9,19 @@
 <ul>
 <li class="name">
 <label>タイトル</label>
+{% if root -%}
+<input type="text" name="title" size="80" value="{{ root.title }}">
+{%- else -%}
 <input type="text" name="title" size="80">
+{%- endif %}
 </li>
 <li class="context">
 <label for="context">本文</label>
-<textarea name="context" cols="80" rows="24"></textarea>
+<textarea name="context" cols="80" rows="24">
+{%- if root -%}
+{{ root.context }}
+{%- endif -%}
+</textarea>
 </li>
 <li>
 <input type="submit" value="送信する">
