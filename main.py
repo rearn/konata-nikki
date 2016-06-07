@@ -114,7 +114,10 @@ def write_step2():
 	if request.method == 'POST':
 		json_data = get_up_data_json(request.form['date'])
 		if json_data != '':
-			return json_data
+			r = konata.write_content('./tests/kn.sqlite3', json_data)
+			app.logger.debug(r)
+			konata.update_status('./tests/kn.sqlite3', r[0]['id'], '200')
+			return redirect(url_for('content', content_id = r[0]['id']), code=303)
 	return redirect(url_for('write'), code=302)
 
 @app.errorhandler(404)

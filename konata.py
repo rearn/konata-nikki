@@ -258,6 +258,7 @@ def write_content(db, write_json):
 	sql_stmt = '''
 		INSERT INTO
 			kn_contents (
+				updated,
 				published,
 				title,
 				author_id,
@@ -265,11 +266,20 @@ def write_content(db, write_json):
 				markup_lang,
 				context
 			)
-		VALUES (?,?,?,?,?,?)
+		VALUES (?,?,?,?,?,?,?)
 	'''
 
+	from datetime import datetime
 	for d in write_date:
-		t = [d['published'], d['title'], 1, 'ja-JP', 'markdown', d['context']]
+		t = [
+			d['updated'],
+			datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+			d['title'],
+			1,
+			'ja-JP',
+			'markdown',
+			d['context']
+		]
 		write_list.append(tuple(t))
 	print(write_list)
 	c.executemany(sql_stmt, write_list)

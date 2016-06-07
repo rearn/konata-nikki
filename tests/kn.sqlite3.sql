@@ -2,7 +2,7 @@ PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE kn_contents (
 id integer primary key autoincrement,
-published date,
+published date default CURRENT_TIMESTAMP,
 updated date default CURRENT_TIMESTAMP,
 title varchar(1024) unique not null,
 author_id int,
