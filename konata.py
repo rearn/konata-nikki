@@ -132,8 +132,7 @@ def read_tag(db, tags_id):
 	sql_stmt = '''
 		SELECT
 			kn_contents.id,
-			title,
-			status
+			title
 		FROM kn_contents_tags
 		INNER JOIN kn_contents
 			ON kn_contents_tags.content_id = kn_contents.id
@@ -281,7 +280,6 @@ def write_content(db, write_json):
 			d['context']
 		]
 		write_list.append(tuple(t))
-	print(write_list)
 	c.executemany(sql_stmt, write_list)
 	conn.commit()
 
@@ -298,7 +296,7 @@ def write_content(db, write_json):
 
 if __name__ == '__main__':
 	dict = {
-		'published': '2016-02-26 08:15:44',
+		'updated': '2016-02-26 08:15:44',
 		'title': 'テストだにぃ',
 		'context': '''
 # 基本方針

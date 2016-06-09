@@ -9,3 +9,13 @@ clean:
 
 db: tests/Makefile
 	cd tests; make
+
+test:
+	make clean
+	make all
+	./test.sh
+
+test-v:
+	make clean
+	make all
+	./test.sh -v
