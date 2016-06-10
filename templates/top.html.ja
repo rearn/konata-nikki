@@ -10,7 +10,7 @@
 <p>{{ site.abstract }}</p>
 </header>
 <ul>
-{% for con in list.contents -%}
+{% for con in list -%}
 <li><a href="{{ url_for('content', content_id=con.id) }}">{{ con.title }}</a></li>
 {% endfor -%}
 </ul>

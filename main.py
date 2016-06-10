@@ -58,11 +58,11 @@ def make_content(md):
 	return markdown(md, extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
 
 def print_content(contents_json, site_json):
-	contens_dict = json.loads(contents_json)
+	contens_list = json.loads(contents_json)
 	site_dict = json.loads(site_json)
-	con = make_content(contens_dict['contents'][0]['context'])
+	con = make_content(contens_list[0]['context'])
 
-	return render_template('contents.html.ja', nav=contens_dict['contents'][0]['nav'], contents=contens_dict['contents'], site=site_dict, markdown=con)
+	return render_template('contents.html.ja', nav=contens_list[0]['nav'], contents=contens_list, site=site_dict, markdown=con)
 
 @app.route('/content/<int:content_id>')
 def content(content_id):

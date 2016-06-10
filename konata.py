@@ -73,8 +73,8 @@ def read_content(db, contents_id):
 		  AND status LIKE '2__'
 		LIMIT 1
 	'''
-	dict_data['contents'] = list(c.execute(sql_stmt, [contents_id]))
-	if len(dict_data['contents']) == 0:
+	contents = list(c.execute(sql_stmt, [contents_id]))
+	if len(contents) == 0:
 		raise ValueError('404 Not Found')
 
 	sql_stmt = '''
@@ -113,12 +113,12 @@ def read_content(db, contents_id):
 	'''
 	for row in c.execute(sql_stmt, [contents_id]):
 		nav['prev'] = row
-	dict_data['contents'][0]['nav'] = nav
+	contents[0]['nav'] = nav
 
 	c.close()
 	conn.close()
-	dict_data['contents'][0]['tags'] = tags
-	return(json.dumps(dict_data, sort_keys=True, indent=4))
+	contents[0]['tags'] = tags
+	return(json.dumps(contents, sort_keys=True, indent=4))
 
 def read_tag(db, tags_id):
 	conn = sqlite3.connect(db)
@@ -153,7 +153,6 @@ def read_tag(db, tags_id):
 
 def contents_list(db):
 	conn = sqlite3.connect(db)
-	dict_data = {}
 
 	conn.row_factory= dict_factory
 	c = conn.cursor()
@@ -167,14 +166,13 @@ def contents_list(db):
 		ORDER BY id DESC
 	'''
 
-	dict_data['contents'] = list(c.execute(sql_stmt))
+	contents = list(c.execute(sql_stmt))
 	c.close()
 	conn.close()
-	return(json.dumps(dict_data, sort_keys=True, indent=4))
+	return(json.dumps(contents, sort_keys=True, indent=4))
 
 def tags_list(db):
 	conn = sqlite3.connect(db)
-	dict_data = {}
 	tags = []
 
 	conn.row_factory= dict_factory
@@ -189,7 +187,9 @@ def tags_list(db):
 		LEFT JOIN kn_tags
 			ON kn_contents_tags.tag_id = kn_tags.id
 		GROUP BY tag
-		ORDER BY count(kn_tags.id) DESC
+		ORDER BY
+			count(kn_tags.id) DESC,
+			kn_tags.id ASC
 	'''
 
 	for row in c.execute(sql_stmt):
@@ -197,10 +197,9 @@ def tags_list(db):
 		del(row['count(kn_tags.id)'])
 		tags.append(row)
 
-	dict_data['tag_list'] = tags
 	c.close()
 	conn.close()
-	return(json.dumps(dict_data, sort_keys=True, indent=4))
+	return(json.dumps(tags, sort_keys=True, indent=4))
 
 def update_status(db, id, status):
 	dict_data = {}
