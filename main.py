@@ -17,7 +17,6 @@
 
 import json
 from markdown import markdown
-from markdown.extensions.toc import TocExtension
 import konata
 from flask import Flask, request, url_for, Response, render_template, abort, redirect
 
@@ -55,7 +54,7 @@ def tag(tag_id):
 	return render_template('tags.html.ja', tag=tag_dict, site=site_dict)
 
 def make_content(md):
-	return markdown(md, extensions=[TocExtension(baselevel=3)], output_format='xhtml5')
+	return markdown(md, output_format='xhtml5')
 
 def print_content(contents_json, site_json):
 	contens_list = json.loads(contents_json)

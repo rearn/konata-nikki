@@ -10,8 +10,8 @@
 <p>{{ site.abstract }}</p>
 </header>
 <ul>
-{% for tags in list.tag_list -%}
-<li><a href="{{ url_for('content', content_id=tags.id) }}">{{ tags.tag }} ({{ tags.count }})</a></li>
+{% for tags in list -%}
+<li><a href="{{ url_for('tag', tag_id=tags.id) }}">{{ tags.tag }} ({{ tags.count }})</a></li>
 {% endfor -%}
 </ul>
 <footer>

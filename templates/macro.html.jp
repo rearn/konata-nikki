@@ -9,9 +9,9 @@
 <li><a href="{{ url_for('tag', tag_id=tag.id) }}">{{ tag.tag }}</a></li>
 {% endfor -%}
 </ul>
-<div itemprop="articleBody">
+<article itemprop="articleBody">
 {{ markdown }}
-</div>
+</article>
 </article>
 {%- endmacro %}
 
