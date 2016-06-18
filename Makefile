@@ -20,5 +20,5 @@ test:
 
 test-v:
 	make before_test
-	./test.sh -v
+	./runtest.py verbose
 
