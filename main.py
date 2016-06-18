@@ -58,18 +58,16 @@ def make_content(md):
 
 def print_content(contents_json, site_json):
 	contens_list = json.loads(contents_json)
+	if len(contens_list) == 0:
+		abort(404)
 	site_dict = json.loads(site_json)
 	con = make_content(contens_list[0]['context'])
-
 	return render_template('contents.html.ja', nav=contens_list[0]['nav'], contents=contens_list, site=site_dict, markdown=con)
 
 @app.route('/content/<int:content_id>')
 def content(content_id):
 	site_json = konata.read_site('./tests/kn.sqlite3')
-	try:
-		contents_json = konata.read_content('./tests/kn.sqlite3', content_id)
-	except:
-		abort(404)
+	contents_json = konata.read_content('./tests/kn.sqlite3', content_id)
 	return print_content(contents_json, site_json)
 
 def get_up_data_json(d):

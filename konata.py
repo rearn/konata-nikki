@@ -84,7 +84,7 @@ def read_content(db, contents_id):
 	'''
 	contents = list(c.execute(sql_stmt, [contents_id]))
 	if len(contents) == 0:
-		raise ValueError('404 Not Found')
+		return(json.dumps(contents, sort_keys=True, indent=4))
 
 	sql_stmt = '''
 		SELECT
