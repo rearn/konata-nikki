@@ -23,9 +23,9 @@ test = False
 
 def now_time():
 	if test:
-		return '2016/06/18 18:47:05'
+		return '2016-06-18 18:47:05'
 	else: # pragma: no cover
-		return datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+		return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 def dict_factory(cursor, row):
 	d = {}
