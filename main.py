@@ -92,9 +92,8 @@ def write():
 
 @app.route("/write/step1", methods=['GET', 'POST'])
 def write_step1():
-	from datetime import datetime
 	if request.method == 'POST':
-		w_dict = {'updated': datetime.now().strftime("%Y/%m/%d %H:%M:%S")}
+		w_dict = {'updated': konata.now_time()}
 		w_dict['title'] = request.form['title']
 		w_dict['context'] = request.form['context']
 		w_dict['author'] = 'name'
