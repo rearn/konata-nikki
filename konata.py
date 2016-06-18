@@ -17,6 +17,15 @@
 
 import json
 import sqlite3
+from datetime import datetime
+
+test = False
+
+def now_time():
+	if test:
+		return '2016/06/18 18:47:05'
+	else:
+		return datetime.now().strftime('%Y/%m/%d %H:%M:%S')
 
 def dict_factory(cursor, row):
 	d = {}
@@ -267,11 +276,10 @@ def write_content(db, write_json):
 		VALUES (?,?,?,?,?,?,?)
 	'''
 
-	from datetime import datetime
 	for d in write_date:
 		t = [
 			d['updated'],
-			datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+			now_time(),
 			d['title'],
 			1,
 			'ja-JP',

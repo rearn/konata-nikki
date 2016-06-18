@@ -6,6 +6,7 @@ class test_konata(unittest.TestCase):
 
 	def setUp(self):
 		self.db = './tests/kn.sqlite3'
+		konata.test = True
 
 	def test_read_site(self):
 		ret = json.loads(konata.read_site(self.db))
@@ -114,6 +115,7 @@ class test_konata(unittest.TestCase):
 			}
 		}
 		self.assertEqual(ret[0]['updated'], dict['updated'])
+		self.assertEqual(ret[0]['published'], '2016/06/18 18:47:05')
 		self.assertEqual(ret[0]['title'], dict['title'])
 		self.assertEqual(ret[0]['context'], dict['context'])
 		self.assertEqual(ret[0]['nav'], assumed)
