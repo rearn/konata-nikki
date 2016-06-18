@@ -52,5 +52,14 @@ class test_main_flask(unittest.TestCase):
 		self.assertRegex(rv.data.decode(),
 			'見つかりません。アドレスが間違っていると思われます。')
 
+	def test_write_step1_get(self):
+		rv = self.app.get('/write/step1')
+		self.assertEqual(rv.status_code, 302)
+
+	def test_write_step2_get(self):
+		rv = self.app.get('/write/step2')
+		self.assertEqual(rv.status_code, 302)
+
+
 if __name__ == '__main__':
 	unittest.main()
