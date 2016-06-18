@@ -22,11 +22,12 @@ from flask import Flask, request, url_for, Response, render_template, abort, red
 
 app = Flask(__name__)
 up_data = {}
+db_name = './tests/kn.sqlite3'
 
 @app.route('/')
 def index():
-	site_json = konata.read_site('./tests/kn.sqlite3')
-	list_json = konata.contents_list('./tests/kn.sqlite3')
+	site_json = konata.read_site(db_name)
+	list_json = konata.contents_list(db_name)
 	app.logger.debug(list_json)
 	site_dict = json.loads(site_json)
 	list_dict = json.loads(list_json)
@@ -34,8 +35,8 @@ def index():
 
 @app.route('/tag/')
 def tag_list():
-	site_json = konata.read_site('./tests/kn.sqlite3')
-	list_json = konata.tags_list('./tests/kn.sqlite3')
+	site_json = konata.read_site(db_name)
+	list_json = konata.tags_list(db_name)
 	app.logger.debug(list_json)
 	site_dict = json.loads(site_json)
 	list_dict = json.loads(list_json)
@@ -44,8 +45,8 @@ def tag_list():
 
 @app.route('/tag/<int:tag_id>')
 def tag(tag_id):
-	site_json = konata.read_site('./tests/kn.sqlite3')
-	tag_json = konata.read_tag('./tests/kn.sqlite3', tag_id)
+	site_json = konata.read_site(db_name)
+	tag_json = konata.read_tag(db_name, tag_id)
 	app.logger.debug(tag_json)
 	site_dict = json.loads(site_json)
 	tag_dict = json.loads(tag_json)
@@ -66,8 +67,8 @@ def print_content(contents_json, site_json):
 
 @app.route('/content/<int:content_id>')
 def content(content_id):
-	site_json = konata.read_site('./tests/kn.sqlite3')
-	contents_json = konata.read_content('./tests/kn.sqlite3', content_id)
+	site_json = konata.read_site(db_name)
+	contents_json = konata.read_content(db_name, content_id)
 	return print_content(contents_json, site_json)
 
 def get_up_data_json(d):
@@ -111,9 +112,9 @@ def write_step2():
 	if request.method == 'POST':
 		json_data = get_up_data_json(request.form['date'])
 		if json_data != '':
-			r = konata.write_content('./tests/kn.sqlite3', json_data)
+			r = konata.write_content(db_name, json_data)
 			app.logger.debug(r)
-			konata.update_status('./tests/kn.sqlite3', r[0]['id'], '200')
+			konata.update_status(db_name, r[0]['id'], '200')
 			return redirect(url_for('content', content_id = r[0]['id']), code=303)
 	return redirect(url_for('write'), code=302)
 
