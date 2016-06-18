@@ -3,4 +3,4 @@
 export PYTHONPATH=$PYTHONPATH:$(pwd)
 export PY=python3
 
-$PY tests/test_konata.py $@
+$PY -m unittest discover -s tests/ $@
