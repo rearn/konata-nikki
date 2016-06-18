@@ -3,6 +3,9 @@ konata-nikki
 
 Basic Weblog (blog) system.
 
+[![Build Status](https://travis-ci.org/rearn/konata-nikki.svg?branch=master)](https://travis-ci.org/rearn/konata-nikki)
+[![Coverage Status](https://coveralls.io/repos/github/rearn/konata-nikki/badge.svg?branch=master)](https://coveralls.io/github/rearn/konata-nikki?branch=master)
+
 ## Description
 
 The now major blog systems are friendly to the writers.
