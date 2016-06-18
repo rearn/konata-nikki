@@ -115,13 +115,13 @@ class test_konata(unittest.TestCase):
 			}
 		}
 		self.assertEqual(ret[0]['updated'], dict['updated'])
-		self.assertEqual(ret[0]['published'], '2016/06/18 18:47:05')
+		self.assertEqual(ret[0]['published'], '2016-06-18 18:47:05')
 		self.assertEqual(ret[0]['title'], dict['title'])
 		self.assertEqual(ret[0]['context'], dict['context'])
 		self.assertEqual(ret[0]['nav'], assumed)
 
 	def test_now_time(self):
-		self.assertEqual(konata.now_time(), '2016/06/18 18:47:05')
+		self.assertEqual(konata.now_time(), '2016-06-18 18:47:05')
 
 if __name__ == '__main__':
 	unittest.main()

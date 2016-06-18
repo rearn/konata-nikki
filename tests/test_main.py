@@ -60,6 +60,63 @@ class test_main_flask(unittest.TestCase):
 		rv = self.app.get('/write/step2')
 		self.assertEqual(rv.status_code, 302)
 
+	def test_write_get(self):
+		rv = self.app.get('/write/')
+		self.assertEqual(rv.status_code, 200)
+		self.assertRegex(rv.data.decode(),
+			'<form method="post" action="/write/step1">')
+		self.assertRegex(rv.data.decode(),
+			'<input type="submit" value="送信する">')
+		self.assertRegex(rv.data.decode(),
+			'<input type="text" name="title" size="80">')
+		self.assertRegex(rv.data.decode(),
+			'<textarea name="context" cols="80" rows="24"></textarea>')
+
+	def test_write_post(self):
+		rv = self.app.post('/write/step1', data=dict(
+			title='にぱ〜',
+			context='テストなのですよ〜'
+		))
+		self.assertRegex(rv.data.decode(),
+			'<p>以下の様に表示されます。問題ありませんか？</p>')
+		self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
+		self.assertRegex(rv.data.decode(), '<h2 itemprop="headline">にぱ〜</h2>')
+		self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
+
+		rv = self.app.post('/write/', data=dict(
+			date='2016-06-18 18:47:05'
+		))
+		self.assertEqual(rv.status_code, 200)
+		self.assertRegex(rv.data.decode(),
+			'<form method="post" action="/write/step1">')
+		self.assertRegex(rv.data.decode(),
+			'<input type="submit" value="送信する">')
+		self.assertRegex(rv.data.decode(),
+			'<input type="text" name="title" size="80" value="にぱ〜">')
+		self.assertRegex(rv.data.decode(),
+			'<textarea name="context" cols="80" rows="24">テストなのですよ〜</textarea>')
+
+	def test_write_step2_post(self):
+		rv = self.app.post('/write/step1', data=dict(
+			title='にぱ〜',
+			context='テストなのですよ〜'
+		))
+		self.assertRegex(rv.data.decode(),
+			'<p>以下の様に表示されます。問題ありませんか？</p>')
+		self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
+		self.assertRegex(rv.data.decode(), '<h2 itemprop="headline">にぱ〜</h2>')
+		self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
+
+		rv = self.app.post('/write/step2', data=dict(
+			date='2016-06-18 18:47:05'
+		), follow_redirects=True)
+		self.assertRegex(rv.data.decode(),
+			'<title>にぱ〜 - kn_test_site</title>')
+		self.assertRegex(rv.data.decode(), '<h2 itemprop="headline">にぱ〜</h2>')
+		self.assertRegex(rv.data.decode(),
+			'<time itemprop="datePublished">2016-06-18 18:47:05</time>')
+		self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
+
 
 if __name__ == '__main__':
 	unittest.main()
