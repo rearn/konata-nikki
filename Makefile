@@ -1,4 +1,4 @@
-SQLITE = sqlite3 
+SQLITE = sqlite3
 CAT = cat
 RM = rm -f
 
@@ -10,12 +10,15 @@ clean:
 db: tests/Makefile
 	cd tests; make
 
-test:
+before_test:
 	make clean
-	make all
-	./test.sh
+	make db
+
+test:
+	make before_test
+	./runtest.py
 
 test-v:
-	make clean
-	make all
+	make before_test
 	./test.sh -v
+
