@@ -15,10 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
+#import json
 from markdown import markdown
 import konata
-from flask import Flask, request, url_for, Response, render_template, abort, redirect
+from flask import abort, Flask, json, redirect, render_template, request
+from flask import Response, url_for
 
 app = Flask(__name__)
 up_data = {}
@@ -98,7 +99,7 @@ def write_step1():
         w_dict['context'] = request.form['context']
         w_dict['author'] = 'name'
 
-        json_data = json.dumps([w_dict], sort_keys=True, indent=4)
+        json_data = json.dumps([w_dict])
         up_data[w_dict['updated']] = json_data
 
         w_dict['markdown'] = make_content(w_dict['context'])

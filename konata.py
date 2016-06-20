@@ -15,9 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
 import sqlite3
 from datetime import datetime
+try:
+    from flask import json
+except ImportError:
+    import json
 
 test = False
 
@@ -55,7 +58,7 @@ def read_site(db):
 
     c.close()
     conn.close()
-    return(json.dumps(dict_data, sort_keys=True, indent=4))
+    return(json.dumps(dict_data))
 
 def read_content(db, contents_id):
     conn = sqlite3.connect(db)
@@ -84,7 +87,7 @@ def read_content(db, contents_id):
     '''
     contents = list(c.execute(sql_stmt, [contents_id]))
     if len(contents) == 0:
-        return(json.dumps(contents, sort_keys=True, indent=4))
+        return(json.dumps(contents))
 
     sql_stmt = '''
         SELECT
@@ -127,7 +130,7 @@ def read_content(db, contents_id):
     c.close()
     conn.close()
     contents[0]['tags'] = tags
-    return(json.dumps(contents, sort_keys=True, indent=4))
+    return(json.dumps(contents))
 
 def read_tag(db, tags_id):
     conn = sqlite3.connect(db)
@@ -158,7 +161,7 @@ def read_tag(db, tags_id):
         dict_data['tag_name'] = row_tag['tag']
     c.close()
     conn.close()
-    return(json.dumps(dict_data, sort_keys=True, indent=4))
+    return(json.dumps(dict_data))
 
 def contents_list(db):
     conn = sqlite3.connect(db)
@@ -178,7 +181,7 @@ def contents_list(db):
     contents = list(c.execute(sql_stmt))
     c.close()
     conn.close()
-    return(json.dumps(contents, sort_keys=True, indent=4))
+    return(json.dumps(contents))
 
 def tags_list(db):
     conn = sqlite3.connect(db)
@@ -208,7 +211,7 @@ def tags_list(db):
 
     c.close()
     conn.close()
-    return(json.dumps(tags, sort_keys=True, indent=4))
+    return(json.dumps(tags))
 
 def update_status(db, id, status):
     dict_data = {}
@@ -322,7 +325,7 @@ if __name__ == '__main__':
     }
     t = []
     t.append(dict)
-    json_data = json.dumps(t, sort_keys=True, indent=4)
+    json_data = json.dumps(t)
     print(json_data) # debug
     r = write_content('./tests/kn.sqlite3', json_data)
     #r = [{'id': 2, 'site_id': 1}]
