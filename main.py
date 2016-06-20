@@ -111,7 +111,8 @@ def write_step2():
     if request.method == 'POST':
         json_data = get_up_data_json(request.form['date'])
         if json_data != '':
-            r = konata.write_content(db_name, json_data)
+            r_json = konata.write_content(db_name, json_data)
+            r = json.loads(r_json)
             app.logger.debug(r)
             konata.update_status(db_name, r[0]['id'], '200')
             return redirect(url_for('content', content_id = r[0]['id']), code=303)

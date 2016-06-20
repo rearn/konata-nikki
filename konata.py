@@ -17,10 +17,7 @@
 
 import sqlite3
 from datetime import datetime
-try:
-    from flask import json
-except ImportError:
-    import json
+from flask import json
 
 test = False
 
@@ -302,32 +299,38 @@ def write_content(db, write_json):
     ret = list(l)
     c.close()
     conn.close()
-    return ret
+    return(json.dumps(ret))
 
-if __name__ == '__main__':
-    dict = {
-        'updated': '2016-02-26 08:15:44',
-        'title': 'テストだにぃ',
-        'context': '''
-# 基本方針
-こんなこと書いとかないと、絶対に横にそれるので
+def add_tag(db, tag_json):
+    conn = sqlite3.connect(db)
+    conn.row_factory= dict_factory
+    c = conn.cursor()
 
-- 過去の環境を切り捨てる
-    - 例えば、python2とかhtml4とか
-- 出来る限り構造とデザインを分ける
-- コミットのコメントは一行目は英語で
-    - 2行目以降と、メモ、ソース内のコメントは日本語可
-- こだわりすぎない
-- `(=ω=.)` <- このAAは関係ない
-    - 関係ないったら関係ない！！！
+    tag_date = json.loads(tag_json)
 
+    sql_stmt = '''
+        INSERT INTO kn_tags(tags)
+        VALUES (?)
     '''
-    }
-    t = []
-    t.append(dict)
-    json_data = json.dumps(t)
-    print(json_data) # debug
-    r = write_content('./tests/kn.sqlite3', json_data)
-    #r = [{'id': 2, 'site_id': 1}]
-    update_status('./tests/kn.sqlite3', r[0]['id'], '200')
+    c.executemany(sql_stmt, tag_date)
+
+    sql_stmt = '''
+        SELECT id
+        FROM kn_tags
+        WHERE tag = ?
+        LIMIT 1
+    '''
+    id_list = list()
+    for d in tag_date:
+        row = c.execute(sql_stmt)
+        id_list.append(row[0]['id'])
+
+
+    c.close()
+    conn.close()
+
+    return(json.dumps(id_list))
+
+def add_content_to_tag(db, inport_json):
+    pass
 
