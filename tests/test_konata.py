@@ -108,7 +108,8 @@ class test_konata(unittest.TestCase):
         }
 
         json_data = json.dumps([dict], sort_keys=True, indent=4)
-        r = konata.write_content('./tests/kn.sqlite3', json_data)
+        r_json = konata.write_content('./tests/kn.sqlite3', json_data)
+        r = json.loads(r_json)
         konata.update_status('./tests/kn.sqlite3', r[0]['id'], '200')
 
         ret = json.loads(konata.read_content(self.db, r[0]['id']))
