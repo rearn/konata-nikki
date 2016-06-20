@@ -309,10 +309,12 @@ def add_tag(db, tag_json):
     tag_date = json.loads(tag_json)
 
     sql_stmt = '''
-        INSERT INTO kn_tags(tags)
+        INSERT INTO kn_tags(tag)
         VALUES (?)
     '''
-    c.executemany(sql_stmt, tag_date)
+    for d in tag_date:
+        c.execute(sql_stmt, [d])
+    conn.commit()
 
     sql_stmt = '''
         SELECT id
@@ -322,7 +324,7 @@ def add_tag(db, tag_json):
     '''
     id_list = list()
     for d in tag_date:
-        row = c.execute(sql_stmt)
+        row = list(c.execute(sql_stmt, [d]))
         id_list.append(row[0]['id'])
 
     c.close()
@@ -347,9 +349,10 @@ def add_content_to_tag(db, import_json):
     '''
     write = list()
     for d in import_date:
-        t = (d[content], d[tags])
+        t = (d['content'], d['tags'])
         write.append(t)
     c.executemany(sql_stmt, write)
+    conn.commit()
 
     c.close()
     conn.close()
