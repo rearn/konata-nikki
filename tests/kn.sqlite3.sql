@@ -15,26 +15,17 @@ CREATE TABLE kn_contents (
         on update cascade
         on delete set null
 );
-INSERT INTO "kn_contents" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','jubeat_saucer_jubegraph_bot',1,'ja-JP','markdown','
-はじめに
-===========================
-このソフトは、[jubegraph](http://jubegraph.dyndns.org/jubeat_saucer/)に自動でアップデートするために開発したソフトです。
-そのため、いろいろとお粗末なところがあります。
-また、このソフトは[KONAMI](http://p.eagate.573.jp/)及び[jubegraph](http://jubegraph.dyndns.org/jubeat_saucer/)とは、一切関係ありません。
-
-仕様環境
-===========================
-このソフトは、以下のソフトを必要とします。
-
-* OpenSSL
-* BSDソケット
-
-そのため、Unix環境が必要と思われます。
-
-ライセンス
-===========================
-ライセンスは三条項BSDライセンスです。
-詳しくは、LICENSEファイルをご覧ください。','200');
+INSERT INTO "kn_contents" VALUES(
+    1,
+    '2015-09-09 10:15:44',
+    '2015-09-09 10:15:44',
+    'konata nikki test',
+    1,
+    'ja-JP',
+    'markdown',
+    '最初のテストページだよ',
+    '200'
+);
 CREATE TABLE kn_author (
     id integer primary key,
     author char(256) unique
@@ -73,7 +64,14 @@ CREATE TABLE kn_sites (
         on update cascade
         on delete set null
 );
-INSERT INTO "kn_sites" VALUES(1,'2015-09-09 10:15:44','2015-09-09 10:15:44','kn_test_site',1,'テストページだす');
+INSERT INTO "kn_sites" VALUES(
+    1,
+    '2015-09-09 10:15:44',
+    '2015-09-09 10:15:44',
+    'kn_test_site',
+    1,
+    'テストサイトだす'
+);
 DELETE FROM sqlite_sequence;
 INSERT INTO "sqlite_sequence" VALUES('kn_contents',1);
 INSERT INTO "sqlite_sequence" VALUES('kn_sites',1);
