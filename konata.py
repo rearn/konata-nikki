@@ -325,12 +325,32 @@ def add_tag(db, tag_json):
         row = c.execute(sql_stmt)
         id_list.append(row[0]['id'])
 
-
     c.close()
     conn.close()
 
     return(json.dumps(id_list))
 
-def add_content_to_tag(db, inport_json):
-    pass
+def add_content_to_tag(db, import_json):
+    conn = sqlite3.connect(db)
+    conn.row_factory= dict_factory
+    c = conn.cursor()
+
+    import_date = json.loads(import_json)
+
+    sql_stmt = '''
+        INSERT INTO
+            kn_contents_tags(
+                content_id,
+                tag_id
+            )
+        VALUES (?,?)
+    '''
+    write = list()
+    for d in import_date:
+        t = (d[content], d[tags])
+        write.append(t)
+    c.executemany(sql_stmt, write)
+
+    c.close()
+    conn.close()
 
