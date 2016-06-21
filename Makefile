@@ -1,24 +1,22 @@
-SQLITE = sqlite3
-CAT = cat
-RM = rm -f
+RUNTEST = ./runtest.py
+MAKE    = make
 
 all: db
 
-clean:
-	$(RM) tests/kn.sqlite3
+clean: tests/Makefile
+	$(MAKE) -C tests clean
 
 db: tests/Makefile
-	cd tests; make
+	$(MAKE) -C tests kn.sqlite3
 
-before_test:
-	make clean
-	make db
+before_test: clean
+	$(MAKE) db
 
-test:
-	make before_test
-	./runtest.py
+test: before_test
+	$(RUNTEST)
 
-test-v:
-	make before_test
-	./runtest.py verbose
+test-v: before_test
+	$(RUNTEST) verbose
 
+test-q: before_test
+	$(RUNTEST) quiet

@@ -8,6 +8,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] == 'verbose':
             unittest.TextTestRunner(verbosity=2).run(suite)
+        elif sys.argv[1] == 'quiet':
+            unittest.TextTestRunner(verbosity=0).run(suite)
         else:
             unittest.TextTestRunner().run(suite)
     else:
