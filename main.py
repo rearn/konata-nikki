@@ -50,7 +50,7 @@ def tag(tag_id):
     app.logger.debug(tag_json)
     site_dict = json.loads(site_json)
     tag_dict = json.loads(tag_json)
-    if tag_dict['tags'] == []:
+    if tag_dict.get('tag_name', '') == '':
         abort(404)
     return render_template('tags.html.ja', tag=tag_dict, site=site_dict)
 
