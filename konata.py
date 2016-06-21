@@ -191,10 +191,10 @@ def tags_list(db):
         SELECT
             kn_tags.id,
             tag,
-            count(kn_tags.id)
-        FROM kn_contents_tags
-        LEFT JOIN kn_tags
-            ON kn_contents_tags.tag_id = kn_tags.id
+            count(kn_contents_tags.id)
+        FROM kn_tags
+        LEFT JOIN kn_contents_tags
+            ON kn_tags.id = kn_contents_tags.tag_id
         GROUP BY tag
         ORDER BY
             count(kn_tags.id) DESC,
@@ -202,8 +202,8 @@ def tags_list(db):
     '''
 
     for row in c.execute(sql_stmt):
-        row['count'] = row['count(kn_tags.id)']
-        del(row['count(kn_tags.id)'])
+        row['count'] = row['count(kn_contents_tags.id)']
+        del(row['count(kn_contents_tags.id)'])
         tags.append(row)
 
     c.close()
