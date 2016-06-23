@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 
-import unittest
-import sys
+from unittest import TestLoader, TextTestRunner
+from sys import argv
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().discover('tests', pattern = "test_*.py")
-    if len(sys.argv) > 1:
-        if sys.argv[1] == 'verbose':
-            unittest.TextTestRunner(verbosity=2).run(suite)
-        elif sys.argv[1] == 'quiet':
-            unittest.TextTestRunner(verbosity=0).run(suite)
-        else:
-            unittest.TextTestRunner().run(suite)
-    else:
-        unittest.TextTestRunner().run(suite)
+    suite = TestLoader().discover('tests', pattern = "test_*.py")
+    v = 1
+    if len(argv) > 1:
+        if argv[1] == 'verbose':
+            v = 2
+        elif argv[1] == 'quiet':
+            v = 0
+    TextTestRunner(verbosity=v).run(suite)
 
