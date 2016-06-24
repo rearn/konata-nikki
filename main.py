@@ -28,16 +28,15 @@ db_name = './tests/kn.sqlite3'
 def index():
     site_json = konata.read_site(db_name)
     list_json = konata.contents_list(db_name)
-    app.logger.debug(list_json)
     site_dict = json.loads(site_json)
     list_dict = json.loads(list_json)
+    app.logger.debug(list_dict)
     return render_template('top.html.ja', list=list_dict, site=site_dict)
 
 @app.route('/tag/')
 def tag_list():
     site_json = konata.read_site(db_name)
     list_json = konata.tags_list(db_name)
-    app.logger.debug(list_json)
     site_dict = json.loads(site_json)
     list_dict = json.loads(list_json)
     app.logger.debug(list_dict)
@@ -62,8 +61,9 @@ def print_content(contents_json, site_json):
     if len(contens_list) == 0:
         abort(404)
     site_dict = json.loads(site_json)
-    con = make_content(contens_list[0]['context'])
-    return render_template('contents.html.ja', nav=contens_list[0]['nav'], contents=contens_list, site=site_dict, markdown=con)
+    for id in range(len(contens_list)):
+        contens_list[id]['markdown'] = make_content(contens_list[id]['context'])
+    return render_template('contents.html.ja', nav=contens_list[0]['nav'], contents=contens_list, site=site_dict)
 
 @app.route('/content/<int:content_id>')
 def content(content_id):
@@ -93,7 +93,8 @@ def write():
 @app.route("/write/step1", methods=['GET', 'POST'])
 def write_step1():
     if request.method == 'POST':
-        w_dict = {'updated': konata.now_time()}
+        w_dict = dict()
+        w_dict['updated'] = konata.now_time()
         w_dict['title'] = request.form['title']
         w_dict['context'] = request.form['context']
         w_dict['author'] = 'name'
@@ -102,6 +103,7 @@ def write_step1():
         up_data[w_dict['updated']] = json_data
 
         w_dict['markdown'] = make_content(w_dict['context'])
+        w_dict['published'] = '2038-01-19 03:14:07'
         return render_template('write1.html.ja', root=w_dict)
 
     return redirect(url_for('write'), code=302)

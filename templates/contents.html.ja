@@ -12,7 +12,7 @@
 {%- import "macro.html.jp" as kn_root_macro -%}
 {{ kn_root_macro.nav(nav) -}}
 {% for root in contents -%}
-	{{ kn_root_macro.contents(root, markdown) }}
+	{{ kn_root_macro.contents(root) }}
 {%- endfor %}
 {{ kn_root_macro.nav(nav) -}}
 <footer>

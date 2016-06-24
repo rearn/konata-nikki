@@ -1,4 +1,4 @@
-{% macro contents(root, markdown) -%}
+{% macro contents(root) -%}
 <article itemscope itemType="http://schema.org/BlogPosting">
 <h1 itemprop="headline">{{ root.title }}</h1>
 <span>公開日: <time itemprop="datePublished">{{ root.published }}</time></span>
@@ -10,7 +10,7 @@
 {% endfor -%}
 </ul>
 <article itemprop="articleBody">
-{{ markdown }}
+{{ root.markdown }}
 </article>
 </article>
 {%- endmacro %}
