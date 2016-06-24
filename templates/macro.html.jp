@@ -1,6 +1,6 @@
 {% macro contents(root, markdown) -%}
 <article itemscope itemType="http://schema.org/BlogPosting">
-<h2 itemprop="headline">{{ root.title }}</h2>
+<h1 itemprop="headline">{{ root.title }}</h1>
 <span>公開日: <time itemprop="datePublished">{{ root.published }}</time></span>
 <span>更新日: <time itemprop="dateModified">{{ root.updated }}</time></span>
 <span>作者: <span itemprop="author">{{ root.author }}</span></span>

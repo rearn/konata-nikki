@@ -81,7 +81,7 @@ class test_main_flask(unittest.TestCase):
             '<p>以下の様に表示されます。問題ありませんか？</p>')
         self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
         self.assertRegex(rv.data.decode(),
-            '<h2 itemprop="headline">にぱ〜？</h2>')
+            '<h1 itemprop="headline">にぱ〜？</h1>')
         self.assertRegex(rv.data.decode(), '<p>テスト？</p>')
 
         rv = self.app.post('/write/', data=dict(
@@ -107,7 +107,7 @@ class test_main_flask(unittest.TestCase):
             '<p>以下の様に表示されます。問題ありませんか？</p>')
         self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
         self.assertRegex(rv.data.decode(),
-            '<h2 itemprop="headline">にぱ〜</h2>')
+            '<h1 itemprop="headline">にぱ〜</h1>')
         self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
 
         rv = self.app.post('/write/step2', data=dict(
@@ -117,7 +117,7 @@ class test_main_flask(unittest.TestCase):
         self.assertRegex(rv.data.decode(),
             '<title>にぱ〜 - kn_test_site</title>')
         self.assertRegex(rv.data.decode(),
-            '<h2 itemprop="headline">にぱ〜</h2>')
+            '<h1 itemprop="headline">にぱ〜</h1>')
         self.assertRegex(rv.data.decode(),
             '<time itemprop="datePublished">2016-06-18 18:47:05</time>')
         self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
@@ -137,7 +137,7 @@ class test_main_flask(unittest.TestCase):
             '<p>以下の様に表示されます。問題ありませんか？</p>')
         self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
         self.assertRegex(rv.data.decode(),
-            '<h2 itemprop="headline">リストのテスト</h2>')
+            '<h1 itemprop="headline">リストのテスト</h1>')
         self.assertRegex(rv.data.decode(), '<h1>テストの名言ぽい何か</h1>')
 
         rv = self.app.post('/write/step2', data=dict(
@@ -147,7 +147,7 @@ class test_main_flask(unittest.TestCase):
         self.assertRegex(rv.data.decode(),
             '<title>リストのテスト - kn_test_site</title>')
         self.assertRegex(rv.data.decode(),
-            '<h2 itemprop="headline">リストのテスト</h2>')
+            '<h1 itemprop="headline">リストのテスト</h1>')
         self.assertRegex(rv.data.decode(),
             '<time itemprop="datePublished">2016-06-18 18:47:05</time>')
         self.assertRegex(rv.data.decode(), '<h1>テストの名言ぽい何か</h1>')
