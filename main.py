@@ -15,10 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-try:
-    from CommonMark import commonmark as markdown
-except ImportError:
-    from markdown import markdown
+from CommonMark import commonmark
 import konata
 from flask import abort, Flask, json, redirect, render_template, request
 from flask import Response, url_for
@@ -57,7 +54,7 @@ def tag(tag_id):
     return render_template('tags.html.ja', tag=tag_dict, site=site_dict)
 
 def md2html(md):
-    return markdown(md, output_format='xhtml5')
+    return commonmark(md)
 
 def print_content(contents_json, site_json):
     contens_list = json.loads(contents_json)
