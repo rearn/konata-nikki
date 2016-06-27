@@ -3,7 +3,7 @@ import main
 
 class test_main(unittest.TestCase):
     def test_make_content(self):
-        ret = main.make_content('# テスト\ntestなのですよー\n\n')
+        ret = main.md2html('# テスト\ntestなのですよー\n\n')
         self.assertEqual(ret, '<h1>テスト</h1>\n<p>testなのですよー</p>')
 
 
