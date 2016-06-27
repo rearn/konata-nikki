@@ -4,7 +4,8 @@ import main
 class test_main(unittest.TestCase):
     def test_make_content(self):
         ret = main.md2html('# テスト\ntestなのですよー\n\n')
-        self.assertEqual(ret, '<h1>テスト</h1>\n<p>testなのですよー</p>')
+        self.assertRegex(ret, '<h1>テスト</h1>')
+        self.assertRegex(ret, '<p>testなのですよー</p>')
 
 
 class test_main_flask(unittest.TestCase):
