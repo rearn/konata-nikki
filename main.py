@@ -15,7 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from markdown import markdown
+try:
+    from CommonMark import commonmark as markdown
+except ImportError:
+    from markdown import markdown
 import konata
 from flask import abort, Flask, json, redirect, render_template, request
 from flask import Response, url_for
