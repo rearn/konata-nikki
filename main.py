@@ -53,7 +53,7 @@ def tag(tag_id):
         abort(404)
     return render_template('tags.html.ja', tag=tag_dict, site=site_dict)
 
-def make_content(md):
+def md2html(md):
     return markdown(md, output_format='xhtml5')
 
 def print_content(contents_json, site_json):
@@ -62,7 +62,7 @@ def print_content(contents_json, site_json):
         abort(404)
     site_dict = json.loads(site_json)
     for id in range(len(contens_list)):
-        contens_list[id]['markdown'] = make_content(contens_list[id]['context'])
+        contens_list[id]['markdown'] = md2html(contens_list[id]['context'])
     return render_template('contents.html.ja', nav=contens_list[0]['nav'], contents=contens_list, site=site_dict)
 
 @app.route('/content/<int:content_id>')
@@ -102,7 +102,7 @@ def write_step1():
         json_data = json.dumps([w_dict])
         up_data[w_dict['updated']] = json_data
 
-        w_dict['markdown'] = make_content(w_dict['context'])
+        w_dict['markdown'] = md2html(w_dict['context'])
         w_dict['published'] = '2038-01-19 03:14:07'
         return render_template('write1.html.ja', root=w_dict)
 
