@@ -1,5 +1,6 @@
 RUNTEST = ./runtest.py
 MAKE    = make
+COVERAGE= coverage
 
 all: db
 
@@ -20,3 +21,12 @@ test-v: before_test
 
 test-q: before_test
 	$(RUNTEST) quiet
+
+coverage-test: before_test
+	$(COVERAGE) run $(RUNTEST)
+
+coverage-test-v: before_test
+	$(COVERAGE) run $(RUNTEST) verbose
+
+coverage-test-q: before_test
+	$(COVERAGE) run $(RUNTEST) quiet
