@@ -152,5 +152,11 @@ class test_konata(unittest.TestCase):
         ret = json.loads(konata.read_content(self.db, r2[0]['id']))
         self.assertEqual(ret[0]['tags'][0]['tag'], 'そーめん')
 
+    def test_rand_str64(self):
+        self.assertEqual(konata.rand_str64(),
+                         '0123456789' + \
+                         'abcdefghijklmnopqrstuvwxyz' + \
+                         'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + '42')
+
 if __name__ == '__main__':
     unittest.main()
