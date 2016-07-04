@@ -17,14 +17,25 @@
 
 import sqlite3
 from datetime import datetime
+from random import choice
+from string import ascii_letters, digits
 from flask import json
 
 test = False
 
+def rand_str64():
+    if test:
+        return digits + ascii_letters + '42'
+    else:  # pragma: no cover
+        a = list()
+        for i in range(64):
+            a.append(choice(ascii_letters + digits))
+        return ''.join(a)
+
 def now_time():
     if test:
         return '2016-06-18 18:47:05'
-    else: # pragma: no cover
+    else:  # pragma: no cover
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 def dict_factory(cursor, row):
