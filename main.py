@@ -80,7 +80,7 @@ def get_up_data_json(d):
     else:
         return ''
 
-@app.route("/write/", methods=['GET', 'POST'])
+@app.route('/write/', methods=['GET', 'POST'])
 def write():
     if request.method == 'POST':
         json_data = get_up_data_json(request.form['date'])
@@ -90,7 +90,7 @@ def write():
             return render_template('write0.html.ja', root=dict[0])
     return render_template('write0.html.ja')
 
-@app.route("/write/step1", methods=['GET', 'POST'])
+@app.route('/write/step1', methods=['GET', 'POST'])
 def write_step1():
     if request.method == 'POST':
         w_dict = dict()
@@ -108,7 +108,7 @@ def write_step1():
 
     return redirect(url_for('write'), code=302)
 
-@app.route("/write/step2", methods=['GET', 'POST'])
+@app.route('/write/step2', methods=['GET', 'POST'])
 def write_step2():
     if request.method == 'POST':
         json_data = get_up_data_json(request.form['date'])
