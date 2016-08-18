@@ -120,6 +120,16 @@ def write_step2():
             return redirect(url_for('content', content_id = r[0]['id']), code=303)
     return redirect(url_for('write'), code=302)
 
+@app.route('/write_tag/', methods=['GET', 'POST'])
+def write_tag():
+    if request.method == 'POST':
+        json_data = get_up_data_json(request.form['date'])
+        if json_data != '':
+            dict = json.loads(json_data)
+            app.logger.debug(dict)
+            return render_template('write_tag0.html.ja', root=dict[0])
+    return render_template('write_tag0.html.ja')
+
 @app.errorhandler(404)
 def error_handler(error):
     e = {
