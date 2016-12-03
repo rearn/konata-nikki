@@ -67,7 +67,7 @@ class test_main_flask(unittest.TestCase):
         self.assertRegex(rv.data.decode(),
             '<form method="post" action="/write/step1">')
         self.assertRegex(rv.data.decode(),
-            '<input type="submit" value="送信する">')
+            '<button type="submit" value="submit">')
         self.assertRegex(rv.data.decode(),
             '<input type="text" name="title" size="80">')
         self.assertRegex(rv.data.decode(),
@@ -92,7 +92,7 @@ class test_main_flask(unittest.TestCase):
         self.assertRegex(rv.data.decode(),
             '<form method="post" action="/write/step1">')
         self.assertRegex(rv.data.decode(),
-            '<input type="submit" value="送信する">')
+            '<button type="submit" value="submit">')
         self.assertRegex(rv.data.decode(),
             '<input type="text" name="title" size="80" value="にぱ〜？">')
         self.assertRegex(rv.data.decode(),
