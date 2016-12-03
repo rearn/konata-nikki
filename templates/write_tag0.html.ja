@@ -16,7 +16,7 @@
 {%- endif %}
 </li>
 <li>
-<input type="submit" value="送信する">
+<button type="submit" value="submit">送信する</button>
 </li>
 </ul>
 </form>

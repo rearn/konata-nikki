@@ -11,8 +11,10 @@
 {{ kn_root_macro.contents(root) }}
 <form method="post" action="{{ url_for('write_step2') }}">
 <input type="hidden" name="date" value="{{ root.updated }}">
-<input type="submit" value="はい、追加します">
-<input type="submit" value="いいえ、修正します" formaction="{{ url_for('write') }}">
+<button type="submit" value="yes">はい、追加します</button>
+<button type="submit" value="no" formaction="{{ url_for('write') }}">
+いいえ、修正します
+</button>
 </form>
 </body>
 </html>
