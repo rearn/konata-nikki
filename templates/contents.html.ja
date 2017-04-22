@@ -9,7 +9,7 @@
 <a href="{{ url_for('index') }}"><h1>{{ site.title }}</h1></a>
 <p>{{ site.abstract }}</p>
 </header>
-{%- import "macro.html.jp" as kn_root_macro -%}
+{%- import "macro.html.ja" as kn_root_macro -%}
 {{ kn_root_macro.nav(nav) -}}
 {% for root in contents -%}
 	{{ kn_root_macro.contents(root, markdown) }}
