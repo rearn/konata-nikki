@@ -15,16 +15,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
 import sqlite3
 from datetime import datetime
+from random import choice
+from string import ascii_letters, digits
+from flask import json
 
 test = False
+
+def rand_str64():
+    if test:
+        return digits + ascii_letters + '42'
+    else:  # pragma: no cover
+        a = list()
+        for i in range(64):
+            a.append(choice(ascii_letters + digits))
+        return ''.join(a)
 
 def now_time():
     if test:
         return '2016-06-18 18:47:05'
-    else: # pragma: no cover
+    else:  # pragma: no cover
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 def dict_factory(cursor, row):
@@ -55,7 +66,7 @@ def read_site(db):
 
     c.close()
     conn.close()
-    return(json.dumps(dict_data, sort_keys=True, indent=4))
+    return(json.dumps(dict_data))
 
 def read_content(db, contents_id):
     conn = sqlite3.connect(db)
@@ -84,7 +95,7 @@ def read_content(db, contents_id):
     '''
     contents = list(c.execute(sql_stmt, [contents_id]))
     if len(contents) == 0:
-        return(json.dumps(contents, sort_keys=True, indent=4))
+        return(json.dumps(contents))
 
     sql_stmt = '''
         SELECT
@@ -127,7 +138,7 @@ def read_content(db, contents_id):
     c.close()
     conn.close()
     contents[0]['tags'] = tags
-    return(json.dumps(contents, sort_keys=True, indent=4))
+    return(json.dumps(contents))
 
 def read_tag(db, tags_id):
     conn = sqlite3.connect(db)
@@ -158,7 +169,7 @@ def read_tag(db, tags_id):
         dict_data['tag_name'] = row_tag['tag']
     c.close()
     conn.close()
-    return(json.dumps(dict_data, sort_keys=True, indent=4))
+    return(json.dumps(dict_data))
 
 def contents_list(db):
     conn = sqlite3.connect(db)
@@ -178,7 +189,7 @@ def contents_list(db):
     contents = list(c.execute(sql_stmt))
     c.close()
     conn.close()
-    return(json.dumps(contents, sort_keys=True, indent=4))
+    return(json.dumps(contents))
 
 def tags_list(db):
     conn = sqlite3.connect(db)
@@ -191,10 +202,10 @@ def tags_list(db):
         SELECT
             kn_tags.id,
             tag,
-            count(kn_tags.id)
-        FROM kn_contents_tags
-        LEFT JOIN kn_tags
-            ON kn_contents_tags.tag_id = kn_tags.id
+            count(kn_contents_tags.id)
+        FROM kn_tags
+        LEFT JOIN kn_contents_tags
+            ON kn_tags.id = kn_contents_tags.tag_id
         GROUP BY tag
         ORDER BY
             count(kn_tags.id) DESC,
@@ -202,13 +213,13 @@ def tags_list(db):
     '''
 
     for row in c.execute(sql_stmt):
-        row['count'] = row['count(kn_tags.id)']
-        del(row['count(kn_tags.id)'])
+        row['count'] = row['count(kn_contents_tags.id)']
+        del(row['count(kn_contents_tags.id)'])
         tags.append(row)
 
     c.close()
     conn.close()
-    return(json.dumps(tags, sort_keys=True, indent=4))
+    return(json.dumps(tags))
 
 def update_status(db, id, status):
     dict_data = {}
@@ -299,32 +310,61 @@ def write_content(db, write_json):
     ret = list(l)
     c.close()
     conn.close()
-    return ret
+    return(json.dumps(ret))
 
-if __name__ == '__main__':
-    dict = {
-        'updated': '2016-02-26 08:15:44',
-        'title': 'テストだにぃ',
-        'context': '''
-# 基本方針
-こんなこと書いとかないと、絶対に横にそれるので
+def add_tag(db, tag_json):
+    conn = sqlite3.connect(db)
+    conn.row_factory= dict_factory
+    c = conn.cursor()
 
-- 過去の環境を切り捨てる
-    - 例えば、python2とかhtml4とか
-- 出来る限り構造とデザインを分ける
-- コミットのコメントは一行目は英語で
-    - 2行目以降と、メモ、ソース内のコメントは日本語可
-- こだわりすぎない
-- `(=ω=.)` <- このAAは関係ない
-    - 関係ないったら関係ない！！！
+    tag_date = json.loads(tag_json)
 
+    sql_stmt = '''
+        INSERT INTO kn_tags(tag)
+        VALUES (?)
     '''
-    }
-    t = []
-    t.append(dict)
-    json_data = json.dumps(t, sort_keys=True, indent=4)
-    print(json_data) # debug
-    r = write_content('./tests/kn.sqlite3', json_data)
-    #r = [{'id': 2, 'site_id': 1}]
-    update_status('./tests/kn.sqlite3', r[0]['id'], '200')
+    for d in tag_date:
+        c.execute(sql_stmt, [d])
+    conn.commit()
+
+    sql_stmt = '''
+        SELECT id
+        FROM kn_tags
+        WHERE tag = ?
+        LIMIT 1
+    '''
+    id_list = list()
+    for d in tag_date:
+        row = list(c.execute(sql_stmt, [d]))
+        id_list.append(row[0]['id'])
+
+    c.close()
+    conn.close()
+
+    return(json.dumps(id_list))
+
+def add_content_to_tag(db, import_json):
+    conn = sqlite3.connect(db)
+    conn.row_factory= dict_factory
+    c = conn.cursor()
+
+    import_date = json.loads(import_json)
+
+    sql_stmt = '''
+        INSERT INTO
+            kn_contents_tags(
+                content_id,
+                tag_id
+            )
+        VALUES (?,?)
+    '''
+    write = list()
+    for d in import_date:
+        t = (d['content'], d['tags'])
+        write.append(t)
+    c.executemany(sql_stmt, write)
+    conn.commit()
+
+    c.close()
+    conn.close()
 

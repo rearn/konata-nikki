@@ -57,6 +57,9 @@ docs/_build/
 # PyBuilder
 target/
 
+# pyvenv
+.python-version
+
 # kn test
 tests/kn.sqlite3
 

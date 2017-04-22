@@ -7,19 +7,14 @@
 <body>
 <p>まだ、投稿は完了していません。</p>
 <p>以下の様に表示されます。問題ありませんか？</p>
-<article itemscope itemType="http://schema.org/BlogPosting">
-<h2 itemprop="headline">{{ root.title }}</h2>
-<span>公開日: <time itemprop="datePublished">2038-01-19 03:14:07</time></span>
-<span>更新日: <time itemprop="dateModified">{{ root.updated }}</time></span>
-<span>作者: <span itemprop="author">{{ root.author }}</span></span>
-<div itemprop="articleBody">
-{{ root.markdown }}
-</div>
-</article>
+{%- import "macro.html.jp" as kn_root_macro -%}
+{{ kn_root_macro.contents(root) }}
 <form method="post" action="{{ url_for('write_step2') }}">
 <input type="hidden" name="date" value="{{ root.updated }}">
-<input type="submit" value="はい、追加します">
-<input type="submit" value="いいえ、修正します" formaction="{{ url_for('write') }}">
+<button type="submit" value="yes">はい、追加します</button>
+<button type="submit" value="no" formaction="{{ url_for('write') }}">
+いいえ、修正します
+</button>
 </form>
 </body>
 </html>

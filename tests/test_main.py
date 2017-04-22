@@ -3,8 +3,9 @@ import main
 
 class test_main(unittest.TestCase):
     def test_make_content(self):
-        ret = main.make_content('# テスト\ntestなのですよー\n\n')
-        self.assertEqual(ret, '<h1>テスト</h1>\n<p>testなのですよー</p>')
+        ret = main.md2html('# テスト\ntestなのですよー\n\n')
+        self.assertRegex(ret, '<h1>テスト</h1>')
+        self.assertRegex(ret, '<p>testなのですよー</p>')
 
 
 class test_main_flask(unittest.TestCase):
@@ -21,7 +22,7 @@ class test_main_flask(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertRegex(rv.data.decode(), '<title>kn_test_site</title>')
         self.assertRegex(rv.data.decode(),
-            '<a href="/content/1">jubeat_saucer_jubegraph_bot</a>')
+            '<a href="/content/1">konata nikki test</a>')
 
     def test_tag_list(self):
         rv = self.app.get('/tag/')
@@ -44,7 +45,7 @@ class test_main_flask(unittest.TestCase):
         rv = self.app.get('/tag/1')
         self.assertEqual(rv.status_code, 200)
         self.assertRegex(rv.data.decode(),
-            '<li><a href="/content/1">jubeat_saucer_jubegraph_bot</a></li>')
+            '<li><a href="/content/1">konata nikki test</a></li>')
 
     def test_tag_error(self):
         rv = self.app.get('/tag/42')
@@ -66,7 +67,7 @@ class test_main_flask(unittest.TestCase):
         self.assertRegex(rv.data.decode(),
             '<form method="post" action="/write/step1">')
         self.assertRegex(rv.data.decode(),
-            '<input type="submit" value="送信する">')
+            '<button type="submit" value="submit">')
         self.assertRegex(rv.data.decode(),
             '<input type="text" name="title" size="80">')
         self.assertRegex(rv.data.decode(),
@@ -74,14 +75,15 @@ class test_main_flask(unittest.TestCase):
 
     def test_write_post(self):
         rv = self.app.post('/write/step1', data=dict(
-            title='にぱ〜',
-            context='テストなのですよ〜'
+            title='にぱ〜？',
+            context='テスト？'
         ))
         self.assertRegex(rv.data.decode(),
             '<p>以下の様に表示されます。問題ありませんか？</p>')
         self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
-        self.assertRegex(rv.data.decode(), '<h2 itemprop="headline">にぱ〜</h2>')
-        self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
+        self.assertRegex(rv.data.decode(),
+            '<h1 itemprop="headline">にぱ〜？</h1>')
+        self.assertRegex(rv.data.decode(), '<p>テスト？</p>')
 
         rv = self.app.post('/write/', data=dict(
             date='2016-06-18 18:47:05'
@@ -90,33 +92,78 @@ class test_main_flask(unittest.TestCase):
         self.assertRegex(rv.data.decode(),
             '<form method="post" action="/write/step1">')
         self.assertRegex(rv.data.decode(),
-            '<input type="submit" value="送信する">')
+            '<button type="submit" value="submit">')
         self.assertRegex(rv.data.decode(),
-            '<input type="text" name="title" size="80" value="にぱ〜">')
+            '<input type="text" name="title" size="80" value="にぱ〜？">')
         self.assertRegex(rv.data.decode(),
-            '<textarea name="context" cols="80" rows="24">テストなのですよ〜</textarea>')
+            '<textarea name="context" cols="80" rows="24">テスト？</textarea>')
 
     def test_write_step2_post(self):
         rv = self.app.post('/write/step1', data=dict(
             title='にぱ〜',
             context='テストなのですよ〜'
         ))
+        self.assertEqual(rv.status_code, 200)
         self.assertRegex(rv.data.decode(),
             '<p>以下の様に表示されます。問題ありませんか？</p>')
         self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
-        self.assertRegex(rv.data.decode(), '<h2 itemprop="headline">にぱ〜</h2>')
+        self.assertRegex(rv.data.decode(),
+            '<h1 itemprop="headline">にぱ〜</h1>')
         self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
 
         rv = self.app.post('/write/step2', data=dict(
             date='2016-06-18 18:47:05'
         ), follow_redirects=True)
+        self.assertEqual(rv.status_code, 200)
         self.assertRegex(rv.data.decode(),
             '<title>にぱ〜 - kn_test_site</title>')
-        self.assertRegex(rv.data.decode(), '<h2 itemprop="headline">にぱ〜</h2>')
+        self.assertRegex(rv.data.decode(),
+            '<h1 itemprop="headline">にぱ〜</h1>')
         self.assertRegex(rv.data.decode(),
             '<time itemprop="datePublished">2016-06-18 18:47:05</time>')
         self.assertRegex(rv.data.decode(), '<p>テストなのですよ〜</p>')
 
+    def test_write_list(self):
+        rv = self.app.post('/write/step1', data=dict(
+            title='リストのテスト',
+            context=\
+                '# テストの名言ぽい何か\n' + \
+                '- いやー、テストってほんといいものですね。\n' + \
+                '- 本稼働でこんなの見せられないよ\n' + \
+                '    - ですよねー\n' + \
+                '\n'
+        ))
+        self.assertEqual(rv.status_code, 200)
+        self.assertRegex(rv.data.decode(),
+            '<p>以下の様に表示されます。問題ありませんか？</p>')
+        self.assertRegex(rv.data.decode(), '2016-06-18 18:47:05')
+        self.assertRegex(rv.data.decode(),
+            '<h1 itemprop="headline">リストのテスト</h1>')
+        self.assertRegex(rv.data.decode(), '<h1>テストの名言ぽい何か</h1>')
+
+        rv = self.app.post('/write/step2', data=dict(
+            date='2016-06-18 18:47:05'
+        ), follow_redirects=True)
+        self.assertEqual(rv.status_code, 200)
+        self.assertRegex(rv.data.decode(),
+            '<title>リストのテスト - kn_test_site</title>')
+        self.assertRegex(rv.data.decode(),
+            '<h1 itemprop="headline">リストのテスト</h1>')
+        self.assertRegex(rv.data.decode(),
+            '<time itemprop="datePublished">2016-06-18 18:47:05</time>')
+        self.assertRegex(rv.data.decode(), '<h1>テストの名言ぽい何か</h1>')
+        self.assertRegex(rv.data.decode(),
+            '<li>いやー、テストってほんといいものですね。</li>')
+        self.assertRegex(rv.data.decode(),
+            '<li>本稼働でこんなの見せられないよ')
+        self.assertRegex(rv.data.decode(),
+            '<li>ですよねー</li>')
+
+    def test_write_step2_post_error(self):
+        rv = self.app.post('/write/step2', data=dict(
+            date='2016-06-20 00:00:00'
+        ))
+        self.assertEqual(rv.status_code, 302)
 
 if __name__ == '__main__':
     unittest.main()

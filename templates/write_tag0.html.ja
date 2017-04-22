@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>記事の追加</title>
+</head>
+<body>
+<form method="post" action="{{ url_for('write_tag_step1') }}">
+<ul>
+<li class="name">
+<label>タグ名</label>
+{% if root -%}
+<input type="text" name="title" size="80" value="{{ root.tag }}">
+{%- else -%}
+<input type="text" name="title" size="80">
+{%- endif %}
+</li>
+<li>
+<button type="submit" value="submit">送信する</button>
+</li>
+</ul>
+</form>
+</body>
+</html>
