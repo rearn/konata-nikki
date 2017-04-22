@@ -7,7 +7,7 @@
 <body>
 <p>まだ、投稿は完了していません。</p>
 <p>以下の様に表示されます。問題ありませんか？</p>
-{%- import "macro.html.jp" as kn_root_macro -%}
+{%- import "macro.html.ja" as kn_root_macro -%}
 {{ kn_root_macro.contents(root) }}
 <form method="post" action="{{ url_for('write_step2') }}">
 <input type="hidden" name="date" value="{{ root.updated }}">
