@@ -130,6 +130,10 @@ def write_tag():
             return render_template('write_tag0.html.ja', root=dict[0])
     return render_template('write_tag0.html.ja')
 
+@app.route('/write_tag/step1', methods=['GET', 'POST'])
+def write_tag_step1():
+    pass
+
 @app.errorhandler(404)
 def error_handler(error):
     e = {
