@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>記事の追加（確認）</title>
+</head>
+<body>
+<p>まだ、投稿は完了していません。</p>
+<p>以下の様に表示されます。問題ありませんか？</p>
+{%- import "macro.html.ja" as kn_root_macro -%}
+{{ kn_root_macro.contents(root) }}
+<form method="post" action="{{ url_for('write_step2') }}">
+<input type="hidden" name="date" value="{{ root.updated }}">
+<button type="submit" value="yes">はい、追加します</button>
+<button type="submit" value="no" formaction="{{ url_for('write') }}">
+いいえ、修正します
+</button>
+</form>
+</body>
+</html>

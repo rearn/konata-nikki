@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>タグの追加（確認）</title>
+</head>
+<body>
+<p>まだ、追加はされていません。</p>
+<p>以下のタグを追加します。問題ありませんか？</p>
+<p>{{ root.tag }}</p>
+<form method="post" action="{{ url_for('add_tag_step2') }}">
+<input type="hidden" name="date" value="{{ root.updated }}">
+<button type="submit" value="yes">はい、追加します</button>
+<button type="submit" value="no" formaction="{{ url_for('add_tag') }}">
+いいえ、修正します
+</button>
+</form>
+</body>
+</html>
