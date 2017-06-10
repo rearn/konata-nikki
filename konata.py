@@ -191,6 +191,26 @@ def contents_list(db):
     conn.close()
     return(json.dumps(contents))
 
+def content_title(db, contents_id):
+    conn = sqlite3.connect(db)
+
+    conn.row_factory= dict_factory
+    c = conn.cursor()
+
+    sql_stmt = '''
+        SELECT
+            id,
+            title
+        FROM kn_contents
+        WHERE status LIKE '2__'
+        WHERE id = ?
+    '''
+
+    contents = list(c.execute(sql_stmt, contents_id))
+    c.close()
+    conn.close()
+    return(json.dumps(contents))
+
 def tags_list(db):
     conn = sqlite3.connect(db)
     tags = []

@@ -122,6 +122,8 @@ def write_step2():
 
 @app.route('/write_tag/<int:content_id>', methods=['GET', 'POST'])
 def write_tag():
+    # content_titleからたいとるもってくる
+    # tags_listでリスト作る
     if request.method == 'POST':
         json_data = get_up_data_json(request.form['date'])
         if json_data != '':
