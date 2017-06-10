@@ -33,7 +33,7 @@ I can't use `issue` by now! Tell me someone!!!
 - [x] `tag list`の追加
 - [x] テストコードの追加
 - [ ] 記事に`tag`を追加
-- [ ] `tag`の追加
+- [x] `tag`の追加
 - ここまでできたら、`v0.0.1`
 - [ ] 記事の削除
 - [ ] 記事の`tag`を削除
