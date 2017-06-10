@@ -142,6 +142,39 @@ def write_tag_step1():
         return render_template('write_tag1.html.ja', root=w_dict)
     return redirect(url_for('write_tag'), code=302)
 
+@app.route('/add_tag/', methods=['GET', 'POST'])
+def add_tag():
+    if request.method == 'POST':
+        json_data = get_up_data_json(request.form['date'])
+        if json_data != '':
+            dict = json.loads(json_data)
+            app.logger.debug(dict)
+            return render_template('add_tag0.html.ja', root=dict[0])
+    return render_template('add_tag0.html.ja')
+
+@app.route('/add_tag/step1', methods=['GET', 'POST'])
+def add_tag_step1():
+    if request.method == 'POST':
+        w_dict = dict()
+        w_dict['updated'] = konata.now_time()
+        w_dict['tag'] = request.form['tag']
+        json_data = json.dumps([w_dict])
+        up_data[w_dict['updated']] = json_data
+        return render_template('add_tag1.html.ja', root=w_dict)
+    return redirect(url_for('add_tag'), code=302)
+
+@app.route('/add_tag/step2', methods=['GET', 'POST'])
+def add_tag_step2():
+    if request.method == 'POST':
+        json_data = get_up_data_json(request.form['date'])
+        if json_data != '':
+            j = json.loads(json_data)
+            app.logger.debug(j)
+            r_json = konata.add_tag(db_name, json.dumps([j[0]['tag']]))
+            app.logger.debug(json.loads(r_json))
+            return redirect(url_for('index'), code=303)
+    return redirect(url_for('add_tag'), code=302)
+
 @app.errorhandler(404)
 def error_handler(error):
     e = {
