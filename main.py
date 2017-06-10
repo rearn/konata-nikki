@@ -120,7 +120,7 @@ def write_step2():
             return redirect(url_for('content', content_id = r[0]['id']), code=303)
     return redirect(url_for('write'), code=302)
 
-@app.route('/write_tag/', methods=['GET', 'POST'])
+@app.route('/write_tag/<int:content_id>', methods=['GET', 'POST'])
 def write_tag():
     if request.method == 'POST':
         json_data = get_up_data_json(request.form['date'])
@@ -132,7 +132,15 @@ def write_tag():
 
 @app.route('/write_tag/step1', methods=['GET', 'POST'])
 def write_tag_step1():
-    pass
+    if request.method == 'POST':
+        pass
+        w_dict = dict()
+        w_dict['updated'] = konata.now_time()
+        w_dict['tag'] = request.form['tag']
+        json_data = json.dumps([w_dict])
+        up_data[w_dict['updated']] = json_data
+        return render_template('write_tag1.html.ja', root=w_dict)
+    return redirect(url_for('write_tag'), code=302)
 
 @app.errorhandler(404)
 def error_handler(error):
