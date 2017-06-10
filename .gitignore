@@ -63,3 +63,6 @@ target/
 # kn test
 tests/kn.sqlite3
 
+# nano
+nano.save
+
